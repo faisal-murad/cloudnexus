@@ -1,35 +1,37 @@
 import mongoose from "mongoose";
- const { Schema } = mongoose;
- const userSchema = new Schema({
-    name:{
+const { Schema } = mongoose;
+const userSchema = new Schema({
+    firstname: {
         type: String,
-        required: true,},
-    firstname:{
-        type:String,
     },
-    lastName:{
-        type:String,
+    lastname: {
+        type: String,
     },
-    gender:{
-        type:String,
-    }, 
-    dateOfBirth:{
-        type:Date,
+    gender: {
+        type: String,
     },
-    age:{
-        type:String,
-    }, 
+    dateOfBirth: {
+        type: Date,
+    },
+    age: {
+        type: String,
+    },
     email: {
         type: String,
         required: true,
         unique: true,
     },
-    password:{
-        type :String ,
+    password: {
+        type: String,
         required: true,
-    },  
+    }, 
+    SID:{
+        type: Number,
+        default: 101,
+    }, 
+    servers: [{ type: Schema.Types.ObjectId, ref: 'Server' }],
     resetToken: String,
     resetTokenExpiration: Date,
- });
+});
 
- export default mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

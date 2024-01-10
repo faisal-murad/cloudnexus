@@ -192,66 +192,30 @@
          <div class="container-fluid">
             <div class="row content-body">
                <div class="col-lg-12">
-                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger">
-                     <div class="iq-card-body box iq-box-relative welcome-box">
-                        <div class="box-image float-right">
-                           <img class="rounded img-fluid" src="images/page-img/37.png" alt="profile">
-                        </div>
-                        <h4 id="welcomeUser" class="d-block mb-3 text-black">Welcome back John</h4>
-                        <p class="d-inline-block welcome-text text-black">
-                           Monitor metrics, track performance, and optimize your cloud effortlessly with our insights.
-                        </p>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-12">
-                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
-                     <div class="iq-card-header d-flex justify-content-between">
-                        <div class="iq-header-title">
-                           <h4 class="card-title">Active Instances</h4>
-                        </div>
-                        <div class="iq-card-header-toolbar d-flex align-items-center" style="cursor: pointer;">
-                           <div class="dropdown">
-                              <button type="button" class="btn btn-success"
-                                 onclick="window.location.href = 'add-server.html'">Add new Server</button>
-                              <span class="dropdown-toggle text-primary" id="dropdownMenuButton2"
-                                 data-toggle="dropdown">
-                                 <i class="ri-more-2-fill"></i>
-                              </span>
-                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2"
-                                 style="cursor: pointer;">
-                                 <a class="dropdown-item"><i class="ri-eye-fill mr-2"></i>View</a>
-                                 <a class="dropdown-item"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                 <a class="dropdown-item"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                 <a class="dropdown-item" onclick="printScreen()"><i
-                                       class="ri-printer-fill mr-2"></i>Print</a>
-                                 <a class="dropdown-item"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="iq-card-body">
-                        <div class="table-responsive">
-                           <table class="table mb-0 table-borderless tbl-server-info">
-                              <thead>
-                                 <tr>
-                                    <th scope="col" class="pl-2">Servers</th>
-                                    <th scope="col" class="pl-2">User</th>
-                                    <th scope="col" class="pl-2">IP Address</th>
-                                    <th scope="col" class="pl-2">Created</th>
-                                    <th scope="col" class="pl-2">OS</th>
-                                    <!-- <th scope= class="pl-2""col">Provider</th> -->
-                                    <th scope="col" class="pl-2"></th>
-                                 </tr>
-                              </thead>
-                              <tbody id="serverTable">
 
-                              </tbody>
-                           </table>
+                  <div class="title-on-header text-center">
+
+                     <h2 class="d-block mb-3 text-black">Add a new Server</h2> 
+                  </div>
+                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-primary">
+                     <div class="iq-card-body box iq-box-relative welcome-box">
+                        <h4 class="d-block mb-3 text-black">Execute the following commands in your terminal</h4>
+                        <div class="iq-card p-3 container-flui bg-dark text-white">
+                           <p id="cmd1" class="d-inline-block welcome-text">
+                              wget
+                              https://raw.githubusercontent.com/hammadkhaliq566/cloudnexus/main/cloudnexus_install.sh
+                           </p>
+                           <p id="cmd2" class="d-inline-block welcome-text">
+                              sudo bash cloudnexus_install.sh Server-Id root
+                           </p>
+                        </div>
+                        <h5>Supported Flavors : Ubuntu, Debian, RedHat, CentOS, Rocky Linux, Oracle Linux, AlmaLinux,
+                           Amazon Linux, SUSE, Fedora, OSX, FreeBSD, IBM AIX, Raspberry Pi, Mandriva Linux, CoreOS,
+                           Gentoo Linux and Oracle Solaris (x86_64 architecture only)</h5>
                         </div>
                      </div>
+                     <h5 id="serverInstalled" style="color: green; text-align: center;"></h5> 
                   </div>
-               </div>
             </div>
          </div>
       </div>
@@ -278,125 +242,6 @@
    <!-- Optional JavaScript -->
    <script src="./customJS/index-page.js"></script>
 
-   <script>
-
-function redirectToServerDetails(userId, serverId) {
-   console.log("User ID = "+userId+ "SID = "+serverId);
-            window.location.href = `server-details.html?user_id=${userId}&SID=${serverId}`;
-         }
-
-function redirectToDeleteServer(userId, serverId) {
-   console.log("User ID = "+userId+ "SID = "+serverId);
-            window.location.href = `delete-server.html?user_id=${userId}&SID=${serverId}`;
-         }
-     
- document.addEventListener('DOMContentLoaded', function () {
-
-   
-
-      let servers;
-      const toSend = {
-         user_id: sessionStorage.getItem('user_id')
-      };
-
-      console.log("UserID:" + sessionStorage.getItem('user_id') + '<>\n\n\n\n');
-
-      fetch('http://localhost:3020/api/user/getAllServers', {
-         method: "POST",
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify(toSend)
-      })
-         .then(response => {
-            if (!response.ok) {
-               throw new Error('Network response was not ok');
-            }
-            return response.json();
-         })
-         .then(data => {
-            servers = data;
-            console.log('Success:', servers);
-
-            const tableBody = document.querySelector('#serverTable');
-            let html = "";
-
-            servers.forEach(server => {
-               const ipAddressString = server.latestServerDetails.ipv4;
-               const startIndex = ipAddressString.indexOf("enX0,");
-               let ipAddress = "";
-
-               if (startIndex !== -1) {
-                  const endIndex = ipAddressString.indexOf(";", startIndex);
-                  if (endIndex !== -1) {
-                     ipAddress = ipAddressString.substring(startIndex + 5, endIndex);
-                  } else {
-                     ipAddress = ipAddressString.substring(startIndex + 5);
-                  }
-               }
-
-
-
-               html += `<tr id="serverTemplate" data-id="${server.SID}"  style="overflow: visible;">
-                          <td class="d-flex align-items-center">
-                              <div class="avatar-40 text-center rounded-circle iq-bg-danger position-relative">
-                                  <span class="font-size-20 align-item-center"><i class="fa fa-user"
-                                          aria-hidden="true"></i><span class="bg-success dots"></span></span>
-                                         
-                              </div> <h6 class="ml-4">${server.SID}</h6>
-                          </td>
-                          <td>
-                              <h6 id="serverName">${server.latestServerDetails.user}</h6>
-                              <span id="serverDetails" class="text-body font-weight-400"> 
-                          </td>
-                          <td id="serverIP">${ipAddress}</td>
-                          <td id="serverTime">${server.latestServerDetails.time}</td>
-                          <td>
-                              <div id="serverTag" class="text-danger">${server.latestServerDetails.os}</div>
-                          </td>
-                          <td></td>
-                          <td onClick="event.preventDefault();">
-                              
-                              <div class="iq-card-header-toolbar d-flex align-items-center" style="cursor: pointer;">
-                           <div class="dropdown">
-                               <span class="dropdown-toggle text-primary" id="dropdownMenuButton2"
-                                 data-toggle="dropdown">
-                                 <i class="ri-more-2-fill"></i>
-                              </span>
-                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2"
-                                 style="cursor: pointer;">
-                                 <a class="dropdown-item" href="#" onclick="redirectToServerDetails('${encodeURIComponent(sessionStorage.getItem('user_id'))}', '${encodeURIComponent(server.SID)}');"><i class="ri-eye-fill mr-2"></i>View</a>
-                                  <a class="dropdown-item" href="#" id="deleteButton" onclick="redirectToDeleteServer('${encodeURIComponent(sessionStorage.getItem('user_id'))}', '${encodeURIComponent(server.SID)}');"><i
-                                          class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                 <a class="dropdown-item"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                 <a class="dropdown-item" onclick="printScreen()"><i
-                                       class="ri-printer-fill mr-2"></i>Print</a>
-                                 <a class="dropdown-item"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                              </div>
-                           </div>
-                        </div>
-                                          </td>
-                                          </tr>`;
-                                       });
-                                       
-                                       tableBody.innerHTML = html;
-                                       
-                                       //  <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                       //  <a class="dropdown-item" href="#"><i
-                                       //          class="ri-printer-fill mr-2"></i>Print</a>
-                                       //  <a class="dropdown-item" href="#"><i
-                                       //          class="ri-file-download-fill mr-2"></i>Download</a> 
-         })
-         .catch(error => {
-            // Handle error  
-            console.error('Error:', error);
-         });
-         
-         
-         // })
- });
-   </script>
-
    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
    <script>
       function downloadScreen() {
@@ -416,6 +261,53 @@ function redirectToDeleteServer(userId, serverId) {
          });
       }
    </script>
+
+   
+<script>
+   let userSID;
+   let user_SID_on_Login = sessionStorage.getItem('SID');
+   const serverInstalled = document.getElementById('serverInstalled');
+
+   async function sidResponse() {
+      const tempp = {
+         user_id: sessionStorage.getItem('user_id')
+      };
+
+      try {
+         const response = await fetch('http://localhost:3020/api/user/checkSid', {
+            method: "POST",
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tempp)
+         });
+
+         if (!response.ok) {
+            throw new Error('Network Response was not OK');
+         }
+
+         const data = await response.json();
+
+         console.log('Success', data);
+         userSID = data.SID;
+
+         console.log("user_SID_on_Login datatype:", typeof(user_SID_on_Login));
+         console.log("userSID datatype:", typeof(userSID));
+
+         if (user_SID_on_Login != userSID) {
+            alert('Agent has been successfully installed!');
+            // serverInstalled.innerText ='Agent has been successfully installed!';
+            sessionStorage.setItem('SID', userSID);
+            window.location.href = 'index.html';
+         }
+      } catch (error) {
+         console.error('Error:', error);
+      }
+   }
+
+   setInterval(sidResponse, 1000);
+</script>
+
    <!-- <script>
       const userName = sessionStorage.getItem('firstname');
 
@@ -595,6 +487,56 @@ function redirectToDeleteServer(userId, serverId) {
    });
 
    </script> -->
+   <!-- 
+   <script>
+      const codeText = document.getElementById('codeText');
+
+      const randomCode = Math.floor(100000 + Math.random() * 900000);
+
+      codeText.innerText = "Code = " + randomCode;
+
+   </script> -->
+
+
+   <script>
+      const email = sessionStorage.getItem("email");
+
+
+
+      const cmd1 = document.getElementById('cmd1');
+      const cmd2 = document.getElementById('cmd2');
+      const user_id = sessionStorage.getItem('user_id');
+
+      const data = {
+         "email": email,
+      }
+      fetch('http://localhost:3020/api/user/FindOneUser', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(data),
+      })
+         .then(response => {
+            if (!response.ok) {
+               throw new Error('Network response was not ok');
+            }
+            return response.json();
+         })
+         .then(data => {
+            // Handle successful response
+            console.log('Executing JavaScript...');
+            console.log('Success:', data);
+
+            cmd1.innerText = "wget https://raw.githubusercontent.com/hammadkhaliq566/cloudnexus/main/cloudnexus_install.sh";
+            cmd2.innerText = `sudo bash cloudnexus_install.sh ${data.SID} ${user_id} root`;
+         })
+         .catch(error => {
+            // Handle error  
+            console.error('Error:', error);
+         });  
+   </script>
+
 
    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
    <script src="js/jquery.min.js"></script>

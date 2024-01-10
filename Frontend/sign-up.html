@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Server360 - Responsive Bootstrap 4 Admin Dashboard Template</title>
+    <title>CloudNexus</title>
     <!-- Favicon -->
     <link rel="shortcut icon" href="images/favicon.ico" />
     <!-- Bootstrap CSS -->
@@ -52,6 +52,7 @@
                             </div>
                             <div class="sign-info">
                                 <button type="submit" class="btn btn-primary mb-2">Sign in</button>
+                                <p style="color: red;" id="errormsg" />
                                 <span class="text-dark dark-color d-block line-height-2">Don't have an account? <a
                                         href="#">Sign up</a></span>
                             </div>
@@ -69,7 +70,7 @@
                         <form class="mt-4" id="signUpForm">
                             <div class="form-group">
                                 <label for="exampleInputEmail2">Your Full Name</label>
-                                <input type="text" class="form-control mb-0" id="name" placeholder="Your Full Name">
+                                <input type="text" class="form-control mb-0" id="firstname" placeholder="Your Full Name">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail3">Email address</label>
@@ -114,38 +115,7 @@
         </div>
     </section>
     <!-- Sign in END -->
-    <!-- color-customizer -->
-    <!-- <div class="iq-colorbox color-fix">
-        <div class="buy-button"> <a class="color-full" href="#"><i class="fa fa-spinner fa-spin"></i></a> </div>
-        <div class="clearfix color-picker">
-            <h3 class="iq-font-black">Server360 Awesome Color</h3>
-            <p>This color combo available inside whole template. You can change on your wish, Even you can create your
-                own with limitless possibilities! </p>
-            <ul class="iq-colorselect clearfix">
-                <li class="color-1 iq-colormark" data-style="color-1"></li>
-                <li class="color-2" data-style="iq-color-2"></li>
-                <li class="color-3" data-style="iq-color-3"></li>
-                <li class="color-4" data-style="iq-color-4"></li>
-                <li class="color-5" data-style="iq-color-5"></li>
-                <li class="color-6" data-style="iq-color-6"></li>
-                <li class="color-7" data-style="iq-color-7"></li>
-                <li class="color-8" data-style="iq-color-8"></li>
-                <li class="color-9" data-style="iq-color-9"></li>
-                <li class="color-10" data-style="iq-color-10"></li>
-                <li class="color-11" data-style="iq-color-11"></li>
-                <li class="color-12" data-style="iq-color-12"></li>
-                <li class="color-13" data-style="iq-color-13"></li>
-                <li class="color-14" data-style="iq-color-14"></li>
-                <li class="color-15" data-style="iq-color-15"></li>
-                <li class="color-16" data-style="iq-color-16"></li>
-                <li class="color-17" data-style="iq-color-17"></li>
-                <li class="color-18" data-style="iq-color-18"></li>
-                <li class="color-19" data-style="iq-color-19"></li>
-                <li class="color-20" data-style="iq-color-20"></li>
-            </ul>
-            <a target="_blank" class="btn btn-primary d-block mt-3" href="">Purchase Now</a>
-        </div>
-    </div> -->
+    <!-- color-customizer --> 
     <!-- color-customizer END -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -182,19 +152,19 @@
     <!-- Custom JavaScript -->
     <script src="js/custom.js"></script>
 
-
     <script>
         document.getElementById('signUpForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
+            console.log("Register API Called\n\n");
             // Get form data
-            const name = document.getElementById('name').value;
+            const firstname = document.getElementById('firstname').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             // Create data object
             const data = {
-                name: name,
+                firstname: firstname,
                 email: email,
                 password: password
             };
@@ -217,6 +187,7 @@
                 .then(data => {
                     // Handle successful response
                     console.log('Success:', data);
+                    sessionStorage.setItem('firstname', data.firstname);
                     sessionStorage.setItem('email', email);
                     window.location.href = 'index.html';
                 })
@@ -234,12 +205,15 @@
             event.preventDefault();
 
             // Get form data 
+            const errormsg = document.getElementById('errormsg');
             const email = document.getElementById('email1').value;
             const password = document.getElementById('password1').value;
             const loginData = {
                 email,
                 password
             };
+
+            
 
             // Send POST request using Fetch API
             fetch('http://localhost:3020/api/user/login', {
@@ -259,17 +233,18 @@
                     // Handle successful response
                     console.log('Executing JavaScript...');
 
+                    sessionStorage.setItem('firstname', data.firstname);
                     sessionStorage.setItem('email', email);
                     window.location.href = 'index.html';
                     console.log('Success:', data);
                 })
                 .catch(error => {
-                    // Handle error
+                    // Handle error 
+                    errormsg.innerHTML = "Email or password is wrong"
                     console.error('Error:', error);
                 });
         });
     </script>
-
 </body>
 
 </html>

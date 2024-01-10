@@ -40,21 +40,20 @@
   --iq-light-card: #ffffff;
   --iq-primary-rgb: 100, 114, 248;
 
-  --iq-dark-title-text:  #000000;
-  --iq-dark-body-text:  #585858;
-  --iq-dark-body-bg: #fafbfe;;
-  --iq-dark-card:  #ffffff;
-  --iq-dark-black:  #000000;
-  --iq-dark1:  #01041b;
-  --iq-border-dark:  #f1f1f1;
-  --iq-dark-primary: #dbd7f0;
+  --iq-dark-title-text: #ffffff;
+  --iq-dark-body-text: #d6d5d7;
+  --iq-dark-body-bg: #010203;
+  --iq-dark-card: #080e15;
+  --iq-dark-black: #ffffff;
+  --iq-dark1: #a2a4af;
+  --iq-border-dark: #ffffff1a;
+  --iq-dark-primary: #4e37b233;
   --iq-dark-primary-bg: #7f62fb;
-  --iq-dark-primary-bg-hover: #452abb;
-  --iq-dark-danger: #ffe4dc;
-  --iq-dark-danger1: #ff7750;
-  --iq-dark-success: #1ee2ac;
-  --iq-dark-close: #ff4e4e;
-  --iq-dark-dark: #01041b;
+  --iq-dark-primary-bg-hover: #7f62fba6;
+  --iq-dark-danger: #ff775233;
+  --iq-dark-success: #e1fff733;
+  --iq-dark-close: #ffdbdb33;
+  --iq-dark-dark: #a2a4af33;
   
   /* color for customizer*/
   --iq-color1: #4e37b2;
