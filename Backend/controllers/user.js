@@ -472,6 +472,9 @@ export const addServer = async (req, res) => {
                 ramswap: serverData.ramswap,
                 rambuff: serverData.rambuff,
                 ramcache: serverData.ramcache,
+                totalusers: serverData.totalusers,
+                totalstorage:serverData.totalstorage,
+                macaddress:serverData.macaddress,
                 disks: serverData.disks,
                 inodes: serverData.inodes,
                 iops: serverData.iops,
@@ -535,7 +538,10 @@ export const addServer = async (req, res) => {
                     conn: serverData.conn,
                     temp: serverData.temp,
                     serv: serverData.serv,
-                    cust: serverData.cust
+                    cust: serverData.cust,
+                    totalusers: serverData.totalusers,
+                    totalstorage:serverData.totalstorage,
+                    macaddress:serverData.macaddress,
                 }]
 
 
@@ -677,7 +683,38 @@ export const checkSid = async (req, res) => {
         console.error('Error Fetching SID:',err);
         return res.status(500).json({error:'Internal Server Error(checkSID)'})
     }
-}
+} 
+
+
+export const getRecentRecords = async (req, res) => {
+    const UID = req.body.UID;
+    const SID = req.body.SID;
+
+  try {
+
+    
+    // Find the server document by SID (replace 'your_sid' with the actual SID) 
+    const server = await Server.findOne({ UID: UID, SID: SID });
+
+    if (!server) {
+      return res.status(404).json({ error: 'Server not found' });
+    }
+
+    // Extract the serverDetails array from the server document
+    const serverDetails = server.serverDetails.reverse();
+ 
+
+    // Get the first five records (most recent)
+    const mostRecentRecords = serverDetails.slice(0, 5);
+
+    // Respond with the most recent records as JSON
+    res.json(mostRecentRecords);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+ 
 
 export const deleteServer = async (req, res) => {
     const user_id = req.params.id;

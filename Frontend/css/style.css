@@ -60,13 +60,23 @@ NOTE: This file contains the styling for responsive Template.
 ======================================
 [ End table content ]
 ======================================*/
-
+/* 
 #serverTemplate:hover
 {
   filter:opacity(80%);
   cursor: pointer;
+} */
+
+.actionView{
+
 }
 
+.actionView:hover{
+  
+  filter:opacity(50%);  
+  cursor: pointer;
+}
+ 
 /*--------------------------------------------------------------------
                             General
 ---------------------------------------------------------------------*/

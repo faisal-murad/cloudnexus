@@ -26,6 +26,7 @@
          window.location.href = 'sign-in.html';
       } 
    </script> -->
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
 <body>
@@ -363,7 +364,7 @@
                               <i class="ri-window-line"></i>
                            </div>
                            <div class="mt-4">
-                              <h5 class="text-black text-uppercase">RAM Used</h5>
+                              <h5 class="text-black text-uppercase">AVERAGE RAM Used</h5>
                               <h3 class="d-flex text-danger"> 4.2%</h3>
                            </div>
                            <div class="mt-3">
@@ -483,9 +484,7 @@
                   </div>
                </div>
                <div class="col-lg-6">
-                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
-                     <div class="iq-card-body">
-                        <ul class="suggestions-lists m-0 p-0">
+                  <!-- <ul class="suggestions-lists m-0 p-0">
                            <li class="d-flex mb-4 align-items-center justify-content-between">
                               <div class="col-sm-9 p-0">
                                  <div class="d-flex align-items-center">
@@ -526,11 +525,104 @@
                                  </div>
                               </div>
                            </li>
-                        </ul>
-                     </div>
+                        </ul> -->
+
+                  <!-- iq-bg-danger -->
+                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height d-flex justify-content-center">
+                     <h4 style="font-size: 16px;" class="text-center mt-2">System Resource Details</h4>
+                     <table class="table table-hover table-borderless rounded m-2 w-auto"
+                        style="border-top: 2px #0000003f solid; border-spacing: 0;">
+
+                        <tbody style="font-size: 12px;">
+                           <tr class="pt-0 pb-0">
+                              <td class="font-weight-600">RAM Size</td>
+                              <td id="ramSize"></td>
+                           </tr>
+                           <tr>
+                              <td class="font-weight-600">CPU Threads</td>
+                              <td id="cputhreads"></td>
+                           </tr>
+                           <tr>
+                              <td class="font-weight-600">CPU Cores</td>
+                              <td id="cpuCores"></td>
+                           </tr>
+                           <tr>
+                              <td class="font-weight-600">CPU Sockets</td>
+                              <td id="cpuSockets"></td>
+                           </tr>
+                           <tr>
+                              <td class="font-weight-600">Total Disk</td>
+                              <td id="totalDisk"></td>
+                           </tr>
+                           <tr>
+                              <td class="font-weight-600">Uptime</td>
+                              <td id="uptime"></td>
+                           </tr>
+                           <tr>
+                              <td class="font-weight-600">Location</td>
+                              <td id="location"></td>
+                           </tr>
+                        </tbody>
+                     </table>
                   </div>
                </div>
-               <div class="col-lg-12">
+               <div class="container-fluid">
+                  <div class="row">
+                     <div class="col-sm-12 col-lg-6">
+                        <div class="iq-card">
+                           <div class="iq-card-header d-flex justify-content-between">
+                              <div class="iq-header-title">
+                                 <h4 class="card-title">CPU Utilization (%)</h4>
+                              </div>
+                           </div>
+                           <div class="iq-card-body">
+                              <div id="cpu_utilization_chart"></div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-sm-12 col-lg-6">
+                        <div class="iq-card">
+                           <div class="iq-card-header d-flex justify-content-between">
+                              <div class="iq-header-title">
+                                 <h4 class="card-title">Memory Utilization (%)</h4>
+                              </div>
+                           </div>
+                           <div class="iq-card-body">
+                              <div id="memory_utilization_chart"></div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-sm-12 col-lg-6">
+                        <div class="iq-card">
+                           <div class="iq-card-header d-flex justify-content-between">
+                              <div class="iq-header-title">
+                                 <h4 class="card-title">Network In (bytes)</h4>
+                              </div>
+                           </div>
+                           <div class="iq-card-body">
+                              <div id="network_in_chart"></div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-sm-12 col-lg-6">
+                        <div class="iq-card">
+                           <div class="iq-card-header d-flex justify-content-between">
+                              <div class="iq-header-title">
+                                 <h4 class="card-title">Network Out (bytes)</h4>
+                              </div>
+                           </div>
+                           <div class="iq-card-body">
+                              <div id="network_out_chart"></div>
+                           </div>
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+
+               <!-- <div class="col-lg-12">
                   <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
@@ -558,8 +650,8 @@
                         <div id="report-chart-02" style="min-height: 150px;"></div>
                      </div>
                   </div>
-               </div>
-               <div class="col-lg-8">
+               </div> -->
+               <!-- <div class="col-lg-8">
                   <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
@@ -582,8 +674,8 @@
                         <div id="iq-income-chart"></div>
                      </div>
                   </div>
-               </div>
-               <div class="col-lg-4">
+               </div> -->
+               <!-- <div class="col-lg-4">
                   <div class="iq-card">
                      <div class="iq-card-body box iq-box-relative rounded">
                         <div class="d-flex align-items-center">
@@ -628,8 +720,8 @@
                         <div id="chart-9"></div>
                      </div>
                   </div>
-               </div>
-               <div class="col-lg-6 row m-0 p-0">
+               </div> -->
+               <!-- <div class="col-lg-6 row m-0 p-0">
                   <div class="col-sm-6">
                      <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                         <div class="iq-card-header d-flex justify-content-between">
@@ -707,8 +799,8 @@
                         </div>
                      </div>
                   </div>
-               </div>
-               <div class="col-lg-6">
+               </div> -->
+               <!-- <div class="col-lg-6">
                   <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
@@ -719,6 +811,66 @@
                         <div id="report-chart-04"></div>
                      </div>
                   </div>
+               </div> -->
+            </div>
+         </div>
+      </div>
+      <div class="container-fluid">
+         <div class="row content-body">
+            <div class="col-lg-6">
+               <div
+                  class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Network Interface Details</h4>
+                  <table class="table table-hover table-borderless rounded m-2 w-auto"
+                     style="border-top: 2px #0000003f solid;">
+                     <thead>
+                        <tr>
+                           <th>Network Interface Name</th>
+                           <th>Mac Address</th>
+                           <th>IPv4 Address</th>
+                           <th>IPv6 Address</th>
+                        </tr>
+                     </thead>
+                     <tbody id="server-details-body">
+                        <tr>
+                           <td>lo</td>
+                           <td id="lomac">${mac}</td>
+                           <td id="loipv4">${ipv4}</td>
+                           <td id="loipv6">${ipv6}</td>
+                        </tr>
+                        <tr>
+                           <td>enx0</td>
+                           <td id="enx0mac">${mac}</td>
+                           <td id="enx0ipv4">${ipv4}</td>
+                           <td id="enx0ipv6">${ipv6}</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <div class="col-lg-6">
+               <div
+                  class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Disk Partition Details</h4>
+                  <table class="table table-hover table-borderless rounded m-2 w-auto"
+                     style="border-top: 2px #0000003f solid;">
+                     <thead>
+                        <tr>
+                           <th>Mount Point</th>
+                           <th>File System</th>
+                           <th>Total Size (GB)</th>
+                           <th>Used Space (GB)</th>
+                           <th>Available Space (GB)</th>
+                        </tr>
+                     </thead>
+                     <tbody id="partitionTable">
+                        <td id="mountpoint">${mac}</td>
+                        <td id="filesystem">${ipv4}</td>
+                        <td id="totalsize">${ipv6}</td>
+                        <td id="usedspace">${ipv6}</td>
+                        <td id="availablespace">${ipv6}</td>
+                     </tbody>
+                  </table>
                </div>
             </div>
          </div>
@@ -728,7 +880,7 @@
             <div class="col-lg-6">
                <div
                   class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
-                  <h4 id="setData" class="mt-3 ml-3">Network Interface Details</h4>
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Network Interface Details</h4>
                   <table class="table table-hover table-borderless rounded m-2 w-auto"
                      style="border-top: 2px #0000003f solid;">
                      <thead>
@@ -740,7 +892,18 @@
                         </tr>
                      </thead>
                      <tbody id="server-details-body">
-
+                        <tr>
+                           <td>lo</td>
+                           <td id="lomac">${mac}</td>
+                           <td id="loipv4">${ipv4}</td>
+                           <td id="loipv6">${ipv6}</td>
+                        </tr>
+                        <tr>
+                           <td>enx0</td>
+                           <td id="enx0mac">${mac}</td>
+                           <td id="enx0ipv4">${ipv4}</td>
+                           <td id="enx0ipv6">${ipv6}</td>
+                        </tr>
                      </tbody>
                   </table>
                </div>
@@ -748,19 +911,24 @@
             <div class="col-lg-6">
                <div
                   class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
-                  <h4 id="setData" class="mt-3 ml-3">Network Interface Details</h4>
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Disk Partition Details</h4>
                   <table class="table table-hover table-borderless rounded m-2 w-auto"
                      style="border-top: 2px #0000003f solid;">
                      <thead>
                         <tr>
-                           <th>Network Interface Name</th>
-                           <th>Mac Address</th>
-                           <th>IPv4 Address</th>
-                           <th>IPv6 Address</th>
+                           <th>Mount Point</th>
+                           <th>File System</th>
+                           <th>Total Size (GB)</th>
+                           <th>Used Space (GB)</th>
+                           <th>Available Space (GB)</th>
                         </tr>
                      </thead>
-                     <tbody id="server-details-body">
-
+                     <tbody id="partitionTable">
+                        <td id="mountpoint">${mac}</td>
+                        <td id="filesystem">${ipv4}</td>
+                        <td id="totalsize">${ipv6}</td>
+                        <td id="usedspace">${ipv6}</td>
+                        <td id="availablespace">${ipv6}</td>
                      </tbody>
                   </table>
                </div>
@@ -797,18 +965,17 @@
       const user_id = urlParams.get('user_id');
       const SID = urlParams.get('SID');
 
-      // Do something with userId and serverId
-      console.log('User ID:', userId);
-      console.log('Server ID:', serverId);
-   </script>
-   <script>
+
+      var cpuArray;
+
+      var recentServerData;
 
       const requestData = {
-         user_id: user_id,
+         UID: user_id,
          SID: SID
       };
       function fetchDataAndDisplay() {
-         fetch('http://localhost:3020/api/user/getLatestServer', {
+         fetch('http://localhost:3020/api/user/getRecentRecords', {
             method: "POST",
             headers: {
                'Content-Type': 'application/json'
@@ -821,9 +988,12 @@
                }
                return response.json();
             })
-            .then(data => {
+            .then(recievedData => {
                // Handle the response data
-               console.log('Success:', data);
+               console.log('Success:', recievedData);
+               const data = recievedData[0];
+
+
 
 
                const avgCpuUsage = (parseFloat(data.cpu) * 100).toFixed(2);
@@ -863,7 +1033,7 @@
 
 
                // const ramSizeMB = Math.round(data.ramsize / 1024);
-               document.getElementById('ramSize').innerText = `${data.ramsize} MB`;
+               document.getElementById('ramSize').innerText = `${parseInt(data.ramsize, 10)} MB`;
 
 
                document.getElementById('cpuCores').innerText = data.cpucores;
@@ -911,22 +1081,59 @@
                ////////////////////////////////////////////////////////////////
                ////////////////////////////////////////////////////////////////
                /////////////        Interface Table Details       ////////////
-               data.nics.split(';').forEach((interfaceData) => {
-                  const [name, mac, ipv4, ipv6] = interfaceData.split(',');
-                  const row = document.createElement('tr');
-                  row.innerHTML = `
-                        <td>${name}</td>
-                        <td>${mac}</td>
-                        <td>${ipv4}</td>
-                        <td>${ipv6}</td>
-                    `;
-                  tableBody.appendChild(row); 
 
 
 
-                  ////////////////////////////////////////////////////////////////
-                  ////////////////////////////////////////////////////////////////
+               const interfaceObjects = {};
+
+               data.ipv4.split(';').forEach((interfaceData) => {
+                  const [name, ipv4] = interfaceData.split(',');
+                  interfaceObjects[name] = interfaceObjects[name] || {};
+                  interfaceObjects[name].ipv4 = ipv4;
                });
+
+               data.ipv6.split(';').forEach((interfaceData) => {
+                  const [name, ipv6] = interfaceData.split(',');
+                  interfaceObjects[name] = interfaceObjects[name] || {};
+                  interfaceObjects[name].ipv6 = ipv6;
+               });
+
+               // Access ipv4 and ipv6 for 'lo'
+               console.log(interfaceObjects);
+               const loObject = interfaceObjects['lo'];
+               const loIPv4 = loObject ? loObject.ipv4 : null;
+               const loIPv6 = loObject ? loObject.ipv6 : null;
+
+               // Access ipv4 and ipv6 for 'enX0'
+               const enX0Object = interfaceObjects['enX0'];
+               const enX0IPv4 = enX0Object ? enX0Object.ipv4 : null;
+               const enX0IPv6 = enX0Object ? enX0Object.ipv6 : null;
+
+               console.log('IPv4 for lo:', loIPv4);
+               console.log('IPv6 for lo:', loIPv6);
+               console.log('IPv4 for enX0:', enX0IPv4);
+               console.log('IPv6 for enX0:', enX0IPv6);
+
+               document.getElementById('loipv4').innerText = loIPv4;
+               document.getElementById('loipv6').innerText = loIPv6;
+               document.getElementById('enx0ipv4').innerText = enX0IPv4;
+               document.getElementById('enx0ipv6').innerText = enX0IPv6;
+
+               // data.nics.split(';').forEach((interfaceData) => {
+               //    const [name, mac, ipv4, ipv6] = interfaceData.split(',');
+               //    const row = document.createElement('tr');
+               //    row.innerHTML = `
+               //          <td>${name}</td>
+               //          <td>${mac}</td>
+               //          <td>${ipv4}</td>
+               //          <td>${ipv6}</td>
+               //      `;
+               //    tableBody.appendChild(row);
+
+
+
+               ////////////////////////////////////////////////////////////////
+               ////////////////////////////////////////////////////////////////
 
                document.getElementById('userTd').innerText = data.user;
                document.getElementById('cputhreads').innerText = data.cputhreads;
@@ -934,7 +1141,7 @@
 
 
                ////////////////////////////////////////////////////////////
-               /////       Average container data setting             /////////////
+               /////       Average CPU container data setting             /////////////
 
 
                cpuIO.childNodes[0].nodeValue = `Average CPU IO Wait: ${(parseFloat(data.wa) * 100).toFixed(2)}%`;
@@ -943,24 +1150,250 @@
 
                cpuUs.childNodes[0].nodeValue = `Average CPU User Time: ${(parseFloat(data.us) * 100).toFixed(2)}%`;
 
+               ////////////////////////////////////////////////////////
+               ////////////////////////////////////////////////////////
 
-               /////////////////////////////////////////////////////////////////////////
-               /////////////////////////////////////////////////////////////////////////
+
+
+
+               /////////////////////////////////////////////////////////
+               ///////// CPU PARTITION DETAILS (DOWN RIGHT Table) //////
+               const diskDetails = data.disks.split(';').filter(entry => entry.trim() !== '');
+
+               const partitionTable = document.getElementById('partitionTable');
+
+               partitionTable.innerHTML = '';
+               //    const tbody = partitionTable.tBodies[0];
+               // while (tbody.firstChild) {
+               //     tbody.removeChild(tbody.firstChild);
+               // }
+
+               diskDetails.forEach(entry => {
+                  const [mountPoint, fileSystem, totalSize, usedSpace, availableSpace] = entry.split(',');
+
+                  // Now you can use these values as needed
+                  console.log('Mount Point:', mountPoint);
+                  console.log('File System:', fileSystem);
+                  console.log('Total Size:', totalSize);
+                  console.log('Used Space:', usedSpace);
+                  console.log('Available Space:', availableSpace);
+
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                            <td>${mountPoint}</td>
+                            <td>${fileSystem || 'N/A'}</td>
+                            <td>${totalSize ? `${(parseFloat(totalSize) / Math.pow(1024, 3)).toFixed(2)} GB` : 'N/A'}</td>
+                            <td>${usedSpace ? `${(parseFloat(usedSpace) / Math.pow(1024, 3)).toFixed(2)} GB` : 'N/A'}</td>
+                            <td>${availableSpace ? `${(parseFloat(availableSpace) / Math.pow(1024, 3)).toFixed(2)} GB` : 'N/A'}</td>
+                        `;
+
+                  partitionTable.appendChild(row);
+
+               })
+
+               //////////////////////////////////////////////////////////////////////
+               /////////////// Using 5 recent data to fit in the charts ///////////
+
+
+               recentServerData = recievedData;
+               console.log("All the recent data is ", recentServerData);
+
+
+               // cpuArray = recentServerData.map(record => parseFloat(((record.cpu) * 100).toFixed(2)));
+               cpuArray = recentServerData.map(record => parseFloat(record.cpu)).reverse();
+               if (cpuArray.length !== 5) {
+                  cpuArray = [0, 0, 0, 0, 0]
+               }
+
+
+
+
+               var cpu_utilization_options = {
+                  chart: {
+                     type: 'line',
+                     height: 300
+                  },
+                  series: [{
+                     name: 'CPU Utilization (%)',
+                     data: cpuArray
+                  }],
+                  xaxis: {
+                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                  }
+               }
+               var chart = new ApexCharts(document.querySelector("#cpu_utilization_chart"), cpu_utilization_options);
+               chart.render();
+
+               var memory_utilization_options = {
+                  chart: {
+                     type: 'line',
+                     height: 300
+                  },
+                  series: [{
+                     name: 'Memory Utilization (%)',
+                     data: [30, 40, 35, 50, 49]
+                  }],
+                  xaxis: {
+                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                  }
+               }
+               var chart = new ApexCharts(document.querySelector("#memory_utilization_chart"), memory_utilization_options);
+               chart.render();
+
+
+               var network_in_options = {
+                  chart: {
+                     type: 'line',
+                     height: 300
+                  },
+                  series: [{
+                     name: 'Network In (bytes)',
+                     data: [30, 40, 35, 50, 49]
+                  }],
+                  xaxis: {
+                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                  }
+               }
+               var chart = new ApexCharts(document.querySelector("#network_in_chart"), network_in_options);
+               chart.render();
+
+
+               var network_out_options = {
+                  chart: {
+                     type: 'line',
+                     height: 300
+                  },
+                  series: [{
+                     name: 'Network Out (bytes)',
+                     data: [30, 40, 35, 50, 49]
+                  }],
+                  xaxis: {
+                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                  },
+                  toolbar: {
+                     show: true,
+                     tools: {
+                        download: true,
+                        zoomin: true,
+                        zoomout: true,
+                        selection: true,
+                        zoom: true,
+                     },
+                  },
+
+               }
+               var chart = new ApexCharts(document.querySelector("#network_out_chart"), network_out_options);
+               chart.render();
+
+               // var options2 = {
+               //    chart: {
+               //       type: 'line', 
+               //       height: 300
+               //    },
+               //    series: [{
+               //       name: 'sales',
+               //       data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+               //    }],
+               //    xaxis: {
+               //       categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+               //    }
+               // }
+               // var chart = new ApexCharts(document.querySelector("#apex-basic1"), options2);
+               // chart.render();
+
+
+               // console.log("CPU ARRAY ", cpuArray);
+               // var options1 = {
+               //    chart: {
+               //       height: 350,
+               //       type: "line",
+               //       foreColor: '#b5b5be',
+               //       zoom: {
+               //          enabled: !1
+               //       }
+               //    },
+               //    colors: ["#4e37b2"],
+               //    series: [{
+               //       name: "Desktops",
+               //       data: cpuArray
+               //    }],
+               //    dataLabels: {
+               //       enabled: !1
+               //    },
+               //    stroke: {
+               //       curve: "straight"
+               //    },
+               //    title: {
+               //       text: "Product Traends by Month",
+               //       align: "left"
+               //    },
+               //    grid: {
+               //       row: {
+               //          colors: ["#f3f3f3", "transparent"],
+               //          opacity: .5
+               //       }
+               //    },
+               //    xaxis: {
+               //       categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+               //    }
+               // };
+               // var chart = new ApexCharts(document.querySelector("#apex-basic111"), options1);
+               // chart.render();
+
+               // var options4 = {
+               //    chart: {
+               //       height: 350,
+               //       type: "line",
+               //       foreColor: '#b5b5be',
+               //       zoom: {
+               //          enabled: !1
+               //       }
+               //    },
+               //    colors: ["#4e37b2"],
+               //    series: [{
+               //       name: "Desktops",
+               //       data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+               //    }],
+               //    dataLabels: {
+               //       enabled: !1
+               //    },
+               //    stroke: {
+               //       curve: "straight"
+               //    },
+               //    title: {
+               //       text: "Product Traends by Month",
+               //       align: "left"
+               //    },
+               //    grid: {
+               //       row: {
+               //          colors: ["#f3f3f3", "transparent"],
+               //          opacity: .5
+               //       }
+               //    },
+               //    xaxis: {
+               //       categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"]
+               //    }
+               // };
+               // var chart = new ApexCharts(document.querySelector("#aab"), options4);
+               // chart.render();
+
 
             })
             .catch(error => {
                // Handle error  
                console.error('Error:', error);
             });
+
       }
+
+
+
+
       fetchDataAndDisplay();
 
       // Set up an interval to call the function every minute (60 seconds)
-      setInterval(fetchDataAndDisplay, 60000);
+      setInterval(fetchDataAndDisplay, 60000); 
    </script>
-
-
-
 
    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
    <script src="js/jquery.min.js"></script>
@@ -976,7 +1409,7 @@
    <!-- Wow JavaScript -->
    <script src="js/wow.min.js"></script>
    <!-- Apexcharts JavaScript -->
-   <script src="js/apexcharts.js"></script>
+   <!-- <script src="js/apexcharts.js"></script> -->
    <!-- Slick JavaScript -->
    <script src="js/slick.min.js"></script>
    <!-- Select2 JavaScript -->
@@ -1016,7 +1449,7 @@
    <!-- Style Customizer -->
    <script src="js/style-customizer.js"></script>
    <!-- Chart Custom JavaScript -->
-   <script src="js/chart-custom.js"></script>
+   <!-- <script src="js/chart-custom.js"></script> -->
    <!-- Custom JavaScript -->
    <script src="js/custom.js"></script>
 
