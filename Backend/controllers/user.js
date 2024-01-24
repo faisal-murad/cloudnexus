@@ -577,7 +577,7 @@ export const addServer = async (req, res) => {
 
 
 
-export const updateSid = async (req, res) => {
+export const installServer = async (req, res) => {
     try {
         const serverData1 = req.body;
         console.log("serverData1", serverData1);
@@ -642,7 +642,7 @@ export const uninstallServer = async (req, res) => {
                 return res.status(404).json({ error: 'User not found' });
             }
 
-            user.SID = (parseInt(user.SID, 10) - 1).toString();
+            // user.SID = (parseInt(user.SID, 10) - 1).toString();
             // Find the index of the server entry in the user's servers array
             const serverIndex = user.servers.findIndex(server => server.equals(serverId));
 

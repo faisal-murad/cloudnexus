@@ -10,23 +10,26 @@
    <link rel="shortcut icon" href="images/favicon.ico" />
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="css/bootstrap.min.css">
+
    <!-- Typography CSS -->
    <link rel="stylesheet" href="css/typography.css">
    <!-- Style CSS -->
    <link rel="stylesheet" href="css/style.css">
    <!-- Responsive CSS -->
    <link rel="stylesheet" href="css/responsive.css">
+   <link rel="stylesheet" href="./customJS/rangeFiles/rangeStyle.css">
    <style>
       table td {
          padding: 2px !important;
       }
    </style>
+
+
    <!-- <script>
       if (!sessionStorage.getItem('email')) {
          window.location.href = 'sign-in.html';
       } 
    </script> -->
-   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
 <body>
@@ -528,42 +531,68 @@
                         </ul> -->
 
                   <!-- iq-bg-danger -->
-                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height d-flex justify-content-center">
-                     <h4 style="font-size: 16px;" class="text-center mt-2">System Resource Details</h4>
+                  <div class="iq-card iq-card-block iq-card-stretch iq-card-height d-flex justify-content-center"
+                     style="height: auto !important;">
+                     <h4 style="font-size: 16px;" class="text-center mt-2">IOPS Table</h4>
                      <table class="table table-hover table-borderless rounded m-2 w-auto"
                         style="border-top: 2px #0000003f solid; border-spacing: 0;">
-
-                        <tbody style="font-size: 12px;">
-                           <tr class="pt-0 pb-0">
-                              <td class="font-weight-600">RAM Size</td>
-                              <td id="ramSize"></td>
-                           </tr>
+                        <thead>
                            <tr>
-                              <td class="font-weight-600">CPU Threads</td>
-                              <td id="cputhreads"></td>
+                              <th>Mount Point</th>
+                              <th>Read IOPS(per sec)</th>
+                              <th>Write IOPS (per sec)</th>
                            </tr>
-                           <tr>
-                              <td class="font-weight-600">CPU Cores</td>
-                              <td id="cpuCores"></td>
-                           </tr>
-                           <tr>
-                              <td class="font-weight-600">CPU Sockets</td>
-                              <td id="cpuSockets"></td>
-                           </tr>
-                           <tr>
-                              <td class="font-weight-600">Total Disk</td>
-                              <td id="totalDisk"></td>
-                           </tr>
-                           <tr>
-                              <td class="font-weight-600">Uptime</td>
-                              <td id="uptime"></td>
-                           </tr>
-                           <tr>
-                              <td class="font-weight-600">Location</td>
-                              <td id="location"></td>
-                           </tr>
+                        </thead>
+                        <tbody id="iopsTable" class="customTable">
+                           <td>${mac}</td>
+                           <td>${ipv6}</td>
+                           <td>${ipv6}</td>
+                           <td>${ipv6}</td>
                         </tbody>
                      </table>
+                  </div>
+                  <button
+                     class="iq-card iq-card-block iq-card-stretch iq-card-height d-flex justify-content-center h-auto w-100 m-3 p-3 bg-info"
+                     data-toggle="modal" data-target="#thresholdModal">
+                     Set Threshold
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="thresholdModal" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                     <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Set Threshold</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                              </button>
+                           </div>
+                           <div class="modal-body">
+                              <div class="container rounded mt-2 mb-2 p-3" style="background-color: var(--iq-search);">
+                                 <h5>CPU</h5>
+                                 <div class="range-slider m-0">
+                                    <input class="range-slider__range" type="range" value="30" min="0" max="100">
+                                    <span class="range-slider__value">0%</span>
+                                 </div>
+                              </div>
+                              <div class="container rounded mt-2 mb-2 p-3" style="background-color: var(--iq-search);">
+                                 <h5>Ram</h5>
+                                 <div class="range-slider m-0">
+                                    <input class="range-slider__range" type="range" value="30" min="0" max="100">
+                                    <span class="range-slider__value">0%</span>
+                                 </div>
+                              </div>
+                              
+                              
+
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Save changes</button>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                </div>
                <div class="container-fluid">
@@ -832,13 +861,13 @@
                         </tr>
                      </thead>
                      <tbody id="server-details-body">
-                        <tr>
+                        <tr class="customTable">
                            <td>lo</td>
                            <td id="lomac">${mac}</td>
                            <td id="loipv4">${ipv4}</td>
                            <td id="loipv6">${ipv6}</td>
                         </tr>
-                        <tr>
+                        <tr class="customTable">
                            <td>enx0</td>
                            <td id="enx0mac">${mac}</td>
                            <td id="enx0ipv4">${ipv4}</td>
@@ -852,7 +881,7 @@
                <div
                   class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
                   <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Disk Partition Details</h4>
-                  <table class="table table-hover table-borderless rounded m-2 w-auto"
+                  <table class="table table-hover table-borderless rounded w-auto"
                      style="border-top: 2px #0000003f solid;">
                      <thead>
                         <tr>
@@ -863,7 +892,7 @@
                            <th>Available Space (GB)</th>
                         </tr>
                      </thead>
-                     <tbody id="partitionTable">
+                     <tbody id="partitionTable" class="customTable">
                         <td id="mountpoint">${mac}</td>
                         <td id="filesystem">${ipv4}</td>
                         <td id="totalsize">${ipv6}</td>
@@ -880,39 +909,8 @@
             <div class="col-lg-6">
                <div
                   class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
-                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Network Interface Details</h4>
-                  <table class="table table-hover table-borderless rounded m-2 w-auto"
-                     style="border-top: 2px #0000003f solid;">
-                     <thead>
-                        <tr>
-                           <th>Network Interface Name</th>
-                           <th>Mac Address</th>
-                           <th>IPv4 Address</th>
-                           <th>IPv6 Address</th>
-                        </tr>
-                     </thead>
-                     <tbody id="server-details-body">
-                        <tr>
-                           <td>lo</td>
-                           <td id="lomac">${mac}</td>
-                           <td id="loipv4">${ipv4}</td>
-                           <td id="loipv6">${ipv6}</td>
-                        </tr>
-                        <tr>
-                           <td>enx0</td>
-                           <td id="enx0mac">${mac}</td>
-                           <td id="enx0ipv4">${ipv4}</td>
-                           <td id="enx0ipv6">${ipv6}</td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div>
-            </div>
-            <div class="col-lg-6">
-               <div
-                  class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
-                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Disk Partition Details</h4>
-                  <table class="table table-hover table-borderless rounded m-2 w-auto"
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Services Details</h4>
+                  <table class="table table-hover table-borderless rounded w-auto"
                      style="border-top: 2px #0000003f solid;">
                      <thead>
                         <tr>
@@ -923,7 +921,7 @@
                            <th>Available Space (GB)</th>
                         </tr>
                      </thead>
-                     <tbody id="partitionTable">
+                     <tbody id="partitionTable" class="customTable">
                         <td id="mountpoint">${mac}</td>
                         <td id="filesystem">${ipv4}</td>
                         <td id="totalsize">${ipv6}</td>
@@ -933,6 +931,30 @@
                   </table>
                </div>
             </div>
+            <div class="col-lg-6">
+               <div
+                  class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">INODES Table</h4>
+                  <table class="table table-hover table-borderless rounded w-auto"
+                     style="border-top: 2px #0000003f solid;">
+                     <thead>
+                        <tr>
+                           <th>Mount Point</th>
+                           <th>Total Size (GB)</th>
+                           <th>Used Space (GB)</th>
+                           <th>Available Space (GB)</th>
+                        </tr>
+                     </thead>
+                     <tbody id="inodeTable" class="customTable">
+                        <td>${mac}</td>
+                        <td>${ipv6}</td>
+                        <td>${ipv6}</td>
+                        <td>${ipv6}</td>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+
          </div>
       </div>
    </div>
@@ -996,7 +1018,7 @@
 
 
 
-               const avgCpuUsage = (parseFloat(data.cpu) * 100).toFixed(2);
+               const avgCpuUsage = (parseFloat(data.cpu)).toFixed(2);
                console.log(`Average CPU Usage = ${data.cpu}, ${avgCpuUsage}`);
                document.getElementById('avgCpuUsage').innerText = `${avgCpuUsage}%`;
 
@@ -1018,18 +1040,25 @@
                const cpuSt = document.getElementById('cpuSt');
 
 
+               // const cpumodexcpuModel;
                const cpumodel = data.cpumodel;
-               const [, brand, modelPart, ghzPart] = cpumodel.match(/(.+?)CPU(.+?)(@.+)/);
 
-               // Extracting processor information
-               const processor = brand.replace(/\(R\)/g, '').trim().replace(/([a-zA-Z])(?=\d)/g, '$1 ').replace(/([a-z])([A-Z])/g, '$1 $2');
+               const regex = /^(Intel\(R\)Xeon\(R\))(.+)/;
 
-               // Extracting CPU model information
-               const cpuModel = (modelPart.trim() + (ghzPart ? ghzPart : '')).trim();
+               const match1 = cpumodel.match(regex);
+
+               const cpuModel1 = match1 ? match1[1] : null;
+               const restOfString1 = match1 ? match1[2] : null;
 
 
-               document.getElementById('processor').innerText = processor;
-               document.getElementById('model').innerText = cpuModel;
+
+               // const [, brand, modelPart, ghzPart] = cpumodel.match(/(.+?)(?:CPU)?(.+?)(@.+)/); 
+               // const processor = brand.trim().replace(/([a-zA-Z])(?=\d)/g, '$1 ').replace(/([a-z])([A-Z])/g, '$1 $2'); 
+               // const cpuModel = (modelPart.trim() + (ghzPart ? ghzPart : '')).trim();
+
+               document.getElementById('processor').innerText = cpuModel1;
+               document.getElementById('model').innerText = restOfString1;
+
 
 
                // const ramSizeMB = Math.round(data.ramsize / 1024);
@@ -1114,21 +1143,27 @@
                console.log('IPv4 for enX0:', enX0IPv4);
                console.log('IPv6 for enX0:', enX0IPv6);
 
-               document.getElementById('loipv4').innerText = loIPv4;
-               document.getElementById('loipv6').innerText = loIPv6;
-               document.getElementById('enx0ipv4').innerText = enX0IPv4;
-               document.getElementById('enx0ipv6').innerText = enX0IPv6;
+               document.getElementById('loipv4').innerText = loIPv4 || 'N/A';
+               document.getElementById('loipv6').innerText = loIPv6 || 'N/A';
+               document.getElementById('enx0ipv4').innerText = enX0IPv4 || 'N/A';
+               document.getElementById('enx0ipv6').innerText = enX0IPv6 || 'N/A';
 
-               // data.nics.split(';').forEach((interfaceData) => {
-               //    const [name, mac, ipv4, ipv6] = interfaceData.split(',');
-               //    const row = document.createElement('tr');
-               //    row.innerHTML = `
-               //          <td>${name}</td>
-               //          <td>${mac}</td>
-               //          <td>${ipv4}</td>
-               //          <td>${ipv6}</td>
-               //      `;
-               //    tableBody.appendChild(row);
+               /////////////mac address///////////////
+               console.log("Mac address = ", data.macaddress);
+               const macAddressDetails = data.macaddress.split(';').filter(entry => entry.trim() !== '');
+               console.log("Mac address details = ", macAddressDetails);
+
+
+               macAddressDetails.forEach(macEntry => {
+                  const [interfaceName, macAddress] = macEntry.split(',');
+
+                  if (interfaceName === 'lo') {
+                     document.getElementById('lomac').innerText = macAddress || 'N/A';
+                  } else if (interfaceName === 'enX0') {
+                     document.getElementById('enx0mac').innerText = macAddress || 'N/A';
+                  }
+               });
+
 
 
 
@@ -1157,26 +1192,16 @@
 
 
                /////////////////////////////////////////////////////////
-               ///////// CPU PARTITION DETAILS (DOWN RIGHT Table) //////
+               ///////// Disk PARTITION DETAILS (DOWN RIGHT Table) //////
                const diskDetails = data.disks.split(';').filter(entry => entry.trim() !== '');
 
                const partitionTable = document.getElementById('partitionTable');
 
                partitionTable.innerHTML = '';
-               //    const tbody = partitionTable.tBodies[0];
-               // while (tbody.firstChild) {
-               //     tbody.removeChild(tbody.firstChild);
-               // }
 
                diskDetails.forEach(entry => {
                   const [mountPoint, fileSystem, totalSize, usedSpace, availableSpace] = entry.split(',');
 
-                  // Now you can use these values as needed
-                  console.log('Mount Point:', mountPoint);
-                  console.log('File System:', fileSystem);
-                  console.log('Total Size:', totalSize);
-                  console.log('Used Space:', usedSpace);
-                  console.log('Available Space:', availableSpace);
 
                   const row = document.createElement('tr');
                   row.innerHTML = `
@@ -1190,6 +1215,63 @@
                   partitionTable.appendChild(row);
 
                })
+
+               //////////////////////////////////////////////////////////////////////
+               /////////////////////IOPS PARSING //////////////////////////////////
+               const iopsDetails = data.iops.split(';').filter(entry => entry.trim() !== '');
+
+               const iopsTable = document.getElementById('iopsTable');
+
+               iopsTable.innerHTML = '';
+
+               iopsDetails.forEach(entry => {
+                  const [iopsmountPoint, readIops, writeIops] = entry.split(',');
+
+                  // Now you can use these values as needed 
+
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                  <td>${iopsmountPoint}</td> 
+                  <td>${readIops || 'N/A'}</td>
+                  <td>${writeIops || 'N/A'}</td> 
+              `;
+
+                  iopsTable.appendChild(row);
+               });
+
+
+
+               ////////////////////////////////////////////////////////////////////
+               ///////////////// INODES PARSING ///////////////////////////////////
+
+               const inodeDetails = data.inodes.split(';').filter(entry => entry.trim() !== '');
+
+               const inodeTable = document.getElementById('inodeTable');
+
+               inodeTable.innerHTML = '';
+
+               inodeDetails.forEach(entry => {
+                  const [mountPoint, totalInodes, usedInodes, availableInodes] = entry.split(',');
+
+                  // Now you can use these values as needed
+                  console.log('Mount Point:', mountPoint);
+                  console.log('Total Inodes:', totalInodes);
+                  console.log('Used Inodes:', usedInodes);
+                  console.log('Available Inodes:', availableInodes);
+
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                                 <td>${mountPoint}</td> 
+                                 <td>${totalInodes || 'N/A'}</td>
+                                 <td>${usedInodes || 'N/A'}</td>
+                                 <td>${availableInodes || 'N/A'}</td>
+                             `;
+
+                  inodeTable.appendChild(row);
+               });
+
+
+
 
                //////////////////////////////////////////////////////////////////////
                /////////////// Using 5 recent data to fit in the charts ///////////
@@ -1206,6 +1288,10 @@
                }
 
 
+               var ramArray = recentServerData.map(record => parseFloat(record.ram)).reverse();
+               if (ramArray.length !== 5) {
+                  ramArray = [0, 0, 0, 0, 0];
+               }
 
 
                var cpu_utilization_options = {
@@ -1231,7 +1317,7 @@
                   },
                   series: [{
                      name: 'Memory Utilization (%)',
-                     data: [30, 40, 35, 50, 49]
+                     data: ramArray
                   }],
                   xaxis: {
                      categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
@@ -1395,6 +1481,8 @@
       setInterval(fetchDataAndDisplay, 60000); 
    </script>
 
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
    <script src="js/jquery.min.js"></script>
    <script src="js/popper.min.js"></script>
@@ -1408,9 +1496,12 @@
    <script src="js/jquery.counterup.min.js"></script>
    <!-- Wow JavaScript -->
    <script src="js/wow.min.js"></script>
+
+   <script src="./customJS/rangeFiles/rangeJS.js"></script>
    <!-- Apexcharts JavaScript -->
    <!-- <script src="js/apexcharts.js"></script> -->
    <!-- Slick JavaScript -->
+
    <script src="js/slick.min.js"></script>
    <!-- Select2 JavaScript -->
    <script src="js/select2.min.js"></script>

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // import express from 'express';
-import {register, login, changePassword, forgotPassword, getLatestServer, FindOneUser, addServer, deleteServer, updateSid, getAllServers, checkSid, uninstallServer, getRecentRecords}  from '../controllers/user.js';
+import {register, login, changePassword, forgotPassword, getLatestServer, FindOneUser, addServer, deleteServer, getAllServers, checkSid, uninstallServer, getRecentRecords, installServer}  from '../controllers/user.js';
 import { authenticateUser  } from '../middlewares/authMiddleware.js';
 import {validateInput } from '../middlewares/validationMiddleware.js'; 
 import multer from 'multer'; 
@@ -22,7 +22,7 @@ router.post('/FindOneUser', FindOneUser);
 router.post('/addServer', addServer); 
 router.post('/getLatestServer', getLatestServer); 
 router.post('/getAllServers', getAllServers); 
-router.post('/updateSid', updateSid); 
+router.post('/installServer', installServer); 
 router.post('/uninstallServer', uninstallServer); 
 router.post('/checkSid', checkSid); 
 router.post('/getRecentRecords', getRecentRecords); 

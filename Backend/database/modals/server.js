@@ -6,6 +6,14 @@ const serverSchema = new Schema({
     UID: {
         type: Schema.Types.ObjectId, ref: 'User'
     },
+    cpuThreshold:{
+        type: Number,
+        default: 0,
+    },
+    ramThreshold:{
+        type: Number,
+        default: 0,
+    },
     serverDetails: [{
 
         agent: String,
