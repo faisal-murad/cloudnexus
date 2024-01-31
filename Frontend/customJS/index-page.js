@@ -19,7 +19,6 @@ const printScreen = () => {
     window.print();
 }
 
-
 // document.addEventListener("DOMContentLoaded", function () {
 
 

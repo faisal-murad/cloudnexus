@@ -78,73 +78,126 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res) => {
     try {
-        // extract email and password from request body
-        const { email, password } = req.body;
+        // Extract relevant data from Google response
+        console.log('req.body = ', req.body);
+        // const { _id, given_name, family_name, email, picture } = req.body;
+        const { userId } = req.user;
+        console.log('userId = ', userId);
 
-        // find user by email in database
-        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASS) {
-            // const token = jwt.sign({ userId: user._id }, "secret-keys", {
-            //     expiresIn: "1h",
-            // });
-            res.json({
-                message: "Admin successful",
-                token,
-                success: true,
-                statusCode: 200,
-                admin: true
-            });
-        }
-        else {
+        // Find user by Google ID
+        let user = await User.findOne({ _id: userId });
 
-            const user = await User.findOne({ email });
-
-            // if no user found, log an error and respond with a message
-            if (!user) {
-                console.error("Invalid credentials: User not found");
-                return res.status(401).json({ error: "Invalid credentials" });
-            }
-
-            // compare provided password with the stored hashed password
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-
-            // if the password is invalid, log an error and respond with a message
-            if (!isPasswordValid) {
-                console.error("Invalid credentials: Either Email or Password is incorrect");
-                return res.status(401).json({ error: "Invalid credentials" });
-            }
-
-            // generate a JSON web Token for authentication
-            const token = jwt.sign({ userId: user._id }, 'secret_key', {
-                expiresIn: "1h",
-            });
-
-            // res.cookie('jwt',token,{
-            //     expires:new Date(Date.now() + 60 * 60 * 1000),
-            //     httpOnly:true
-            // });
-            // console.log("res cookie\n\n\n", res.cookie.jwt);
-            // respond with success
-            res.json({
-                user_id: user._id,
-                SID: user.SID,
-                firstname: user.firstname,
+        // If user doesn't exist, create a new one
+        if (!user) {
+            user = new User({
+                _id: userId,
+                firstname: user.given_name,
+                lastname: user.family_name,
                 email: user.email,
-                message: "Login successful",
-                token,
-                success: true,
-                statusCode: 200,
-                admin: false
+                picture: user.picture
             });
+            await user.save();
         }
+
+        // Generate JWT token
+        // const token = jwt.sign({ userId: user._id }, 'secret_key', {
+        //     expiresIn: '1h'
+        // });
+
+        // Respond with success and the JWT token
+        return res.json({
+            user_id: user._id,
+            firstname: user.firstname,
+            lastname: user.family_name,
+            SID: user.SID,
+            email: user.email,
+            picture: user.picture,
+            message: "Login successful",
+            // token,
+            success: true,
+            statusCode: 200
+        });
     } catch (error) {
         console.error("Login failed:", error);
-        res.status(500).json({
+        return res.status(500).json({
             error: "Login failed",
             success: false,
             statusCode: 500,
         });
     }
 };
+
+// export const login = async (req, res) => {
+//     try {
+//         // extract email and password from request body
+//         const { email, password } = req.body;
+
+//         // find user by email in database
+//         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASS) {
+//             // const token = jwt.sign({ userId: user._id }, "secret-keys", {
+//             //     expiresIn: "1h",
+//             // });
+//             res.json({
+//                 message: "Admin successful",
+//                 token,
+//                 success: true,
+//                 statusCode: 200,
+//                 admin: true
+//             });
+//         }
+//         else {
+
+//             const user = await User.findOne({ email });
+
+//             // if no user found, log an error and respond with a message
+//             if (!user) {
+//                 console.error("Invalid credentials: User not found");
+//                 return res.status(401).json({ error: "Invalid credentials" });
+//             }
+
+//             // compare provided password with the stored hashed password
+//             const isPasswordValid = await bcrypt.compare(password, user.password);
+
+//             // if the password is invalid, log an error and respond with a message
+//             if (!isPasswordValid) {
+//                 console.error("Invalid credentials: Either Email or Password is incorrect");
+//                 return res.status(401).json({ error: "Invalid credentials" });
+//             }
+
+//             // generate a JSON web Token for authentication
+//             const token = jwt.sign({ userId: user._id }, 'secret_key', {
+//                 expiresIn: "1h",
+//             });
+
+//             // res.cookie('jwt',token,{
+//             //     expires:new Date(Date.now() + 60 * 60 * 1000),
+//             //     httpOnly:true
+//             // });
+//             // console.log("res cookie\n\n\n", res.cookie.jwt);
+//             // respond with success
+//             res.json({
+//                 user_id: user._id,
+//                 SID: user.SID,
+//                 firstname: user.firstname,
+//                 email: user.email,
+//                 message: "Login successful",
+//                 token,
+//                 success: true,
+//                 statusCode: 200,
+//                 admin: false
+//             });
+//         }
+//     } catch (error) {
+//         console.error("Login failed:", error);
+//         res.status(500).json({
+//             error: "Login failed",
+//             success: false,
+//             statusCode: 500,
+//         });
+//     }
+// };
+
+// add google id in _id in mongodb, when logging in or inserting
 
 // controllers for change password
 export const changePassword = async (req, res) => {
@@ -225,10 +278,10 @@ export const forgotPassword = async (req, res) => {
 
 
 export const FindOneUser = async (req, res) => {
-    const { email } = req.body;
+    const { _id } = req.body;
 
     try {
-        const foundUser = await User.findOne({ email: email });
+        const foundUser = await User.findById({ _id:_id });
         if (foundUser) {
             res.send(foundUser);
         } else {
@@ -373,21 +426,20 @@ export const getAllServers = async (req, res) => {
     }
 };
 
-export const getOneServer = async (req,res)=>{ 
+export const getOneServer = async (req, res) => {
     const { UID, SID } = req.body;
 
-    try{
-        const server = await Server.findOne({UID, SID});
+    try {
+        const server = await Server.findOne({ UID, SID });
 
-        if(!server)
-        {
-            return res.status(404).json({Error:"Server Not Found"});
+        if (!server) {
+            return res.status(404).json({ Error: "Server Not Found" });
         }
 
-        return res.status(200).json({server});
+        return res.status(200).json({ server });
     }
-    catch(error){
-        return res.status(500).json({Error:"Internal Server Error",error});
+    catch (error) {
+        return res.status(500).json({ Error: "Internal Server Error", error });
     }
 }
 
@@ -429,14 +481,14 @@ export const addServer = async (req, res) => {
         const serverData = JSON.parse(serverData2);
 
         // Find the existing user based on UID
-        const user = await User.findOne({ UID: serverData.UID });
+        const user = await User.findOne({ _id: serverData.UID });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
         // Find the existing server based on UID and SID
-        const existingServer = await Server.findOne({ UID: new mongoose.Types.ObjectId(serverData.UID), SID: serverData.SID });
+        const existingServer = await Server.findOne({ UID: serverData.UID, SID: serverData.SID });
 
         if (existingServer) {
             // Server exists, push the server details
@@ -473,8 +525,8 @@ export const addServer = async (req, res) => {
                 rambuff: serverData.rambuff,
                 ramcache: serverData.ramcache,
                 totalusers: serverData.totalusers,
-                totalstorage:serverData.totalstorage,
-                macaddress:serverData.macaddress,
+                totalstorage: serverData.totalstorage,
+                macaddress: serverData.macaddress,
                 disks: serverData.disks,
                 inodes: serverData.inodes,
                 iops: serverData.iops,
@@ -496,7 +548,7 @@ export const addServer = async (req, res) => {
             // Server doesn't exist, create a new server
             const toSave = {
                 SID: serverData.SID,
-                UID: new mongoose.Types.ObjectId(serverData.UID),
+                UID: serverData.UID,
                 serverDetails: [{
 
                     agent: serverData.agent,
@@ -540,8 +592,8 @@ export const addServer = async (req, res) => {
                     serv: serverData.serv,
                     cust: serverData.cust,
                     totalusers: serverData.totalusers,
-                    totalstorage:serverData.totalstorage,
-                    macaddress:serverData.macaddress,
+                    totalstorage: serverData.totalstorage,
+                    macaddress: serverData.macaddress,
                 }]
 
 
@@ -562,8 +614,8 @@ export const addServer = async (req, res) => {
             await updatedUser.save();
 
             await server.save();
-            user.servers.push(server._id);
-            await user.save();
+            // user.servers.push(server._id);
+            // await user.save();
 
             // Save the new server document
         }
@@ -588,8 +640,8 @@ export const installServer = async (req, res) => {
         // Check if the received status is "200"
         if (serverData.status == '200') {
             // Find the user by UID
-            const user = await User.findById(new mongoose.Types.ObjectId(serverData.UID));
-            // const user = await User.findById(serverData.UID);
+            // const user = await User.findById(new mongoose.Types.ObjectId(serverData.UID)); 
+            const user = await User.findById(serverData.UID);
 
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
@@ -630,7 +682,7 @@ export const uninstallServer = async (req, res) => {
                 return res.status(404).json({ error: 'Server not found' });
             }
             // Store the _id of the server
-            const serverId = server._id; 
+            const serverId = server._id;
 
             const result = await Server.deleteOne({ UID: serverData.UID, SID: serverData.SID });
             console.log("after deleting server:", result);
@@ -666,55 +718,87 @@ export const uninstallServer = async (req, res) => {
 
 export const checkSid = async (req, res) => {
     const user_id = req.body.user_id;
-    try{
-        const foundUser = await User.findById({_id: user_id});
-        if(!foundUser)
-        {
-            return res.status(404).json({error: "User not found"});
+    try {
+        const foundUser = await User.findById({ _id: user_id });
+        if (!foundUser) {
+            return res.status(404).json({ error: "User not found" });
         }
 
         const Sid = foundUser.SID;
 
-        return res.status(200).json({SID: Sid});
+        return res.status(200).json({ SID: Sid });
 
     }
-    catch(err)
-    {
-        console.error('Error Fetching SID:',err);
-        return res.status(500).json({error:'Internal Server Error(checkSID)'})
+    catch (err) {
+        console.error('Error Fetching SID:', err);
+        return res.status(500).json({ error: 'Internal Server Error(checkSID)' })
     }
-} 
+}
 
 
 export const getRecentRecords = async (req, res) => {
     const UID = req.body.UID;
     const SID = req.body.SID;
 
-  try {
+    try {
 
-    
-    // Find the server document by SID (replace 'your_sid' with the actual SID) 
-    const server = await Server.findOne({ UID: UID, SID: SID });
 
-    if (!server) {
-      return res.status(404).json({ error: 'Server not found' });
+        // Find the server document by SID (replace 'your_sid' with the actual SID) 
+        const server = await Server.findOne({ UID: UID, SID: SID });
+
+        if (!server) {
+            return res.status(404).json({ error: 'Server not found' });
+        }
+
+        // Extract the serverDetails array from the server document
+        const serverDetails = server.serverDetails.reverse();
+
+
+        // Get the first five records (most recent)
+        const mostRecentRecords = serverDetails.slice(0, 5);
+
+        // Respond with the most recent records as JSON
+        res.json(mostRecentRecords);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    // Extract the serverDetails array from the server document
-    const serverDetails = server.serverDetails.reverse();
- 
-
-    // Get the first five records (most recent)
-    const mostRecentRecords = serverDetails.slice(0, 5);
-
-    // Respond with the most recent records as JSON
-    res.json(mostRecentRecords);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 };
- 
+
+
+
+export const getThreshold = async (req, res) => {
+    const UID = req.body.UID;
+    const SID = req.body.SID;
+
+    try {
+
+
+        // Find the server document by SID (replace 'your_sid' with the actual SID) 
+        const server = await Server.findOne({ UID: UID, SID: SID });
+
+        if (!server) {
+            return res.status(404).json({ error: 'Server not found' });
+        }
+
+        // Extract the serverDetails array from the server document
+        const cpuThreshold = server.cpuThreshold;
+        const ramThreshold = server.ramThreshold;
+
+        const toSend = {
+            cpuThreshold,
+            ramThreshold
+        }
+
+        // Respond with the most recent records as JSON
+        res.json(toSend);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 export const deleteServer = async (req, res) => {
     const user_id = req.params.id;
@@ -732,3 +816,166 @@ export const deleteServer = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 }
+
+
+export const updateThreshold = async (req, res) => {
+    const { cpuThreshold, ramThreshold, user_id, SID } = req.body;
+
+    try {
+        const user = User.findById(user_id);
+        if (!user) {
+            return res.status(404).json({ error: "User not Found" });
+        }
+        const myserver = await Server.findOne({ SID: SID, UID: user_id });
+
+        if (!myserver) {
+            return res.status(400).json({ error: "Server not Found" });
+        }
+
+        // Update the cpuThreshold property
+        myserver.cpuThreshold = cpuThreshold;
+        myserver.ramThreshold = ramThreshold;
+
+        // Save the changes to the server
+        await myserver.save();
+
+        // Send a success response
+        return res.status(200).json({ success: "CpuThreshold updated successfully" });
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+export const logoutUser = async (req, res) => {
+    try {
+        // Logout the user
+        req.logout();
+
+        // Optionally, you can respond with a JSON message indicating successful logout
+        res.status(200).json({ message: 'User logged out successfully' });
+    } catch (error) {
+        console.error('Error logging out user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
+ 
+export const sendMail = async (req, res) => {
+    const { from, to, subject, text, html } = req.body;
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.SENDER_EMAIL,
+            pass: process.env.APP_PASSWORD,
+        },
+    });
+    
+    const mailOptions = { 
+        from: {
+            name: 'CLOUDNEXUS',
+            address: from || process.env.SENDER_EMAIL,
+        },
+        to: to || "faisalmurad.baloch@gmail.com",
+        subject: subject || "Nah man",
+        text: text || "Camera wowo",
+        html: html || "<a href='www.google.com'>Hello world?</a>",
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Email has been sent successfully");
+        res.status(200).send({ message: 'Email sent successfully' });
+    } catch(error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+}
+export const getAllUsersAndServers = async (req, res) => {
+    try {
+        // Retrieve all users
+        const users = await User.find();
+
+        // Iterate over each user
+        for (const user of users) {
+            // Retrieve all servers for the current user
+            const servers = await Server.find({ UID: user._id });
+
+            // Iterate over each server
+            for (const server of servers) {
+                // Check if serverDetails array is empty
+                if (!server.serverDetails || server.serverDetails.length === 0) {
+                    continue; // Skip if no server details available
+                }
+
+                // Get the latest server details
+                const latestDetails = server.serverDetails[server.serverDetails.length - 1];
+
+                // Check if latestDetails object is defined
+                if (!latestDetails) {
+                    continue; // Skip if latestDetails is undefined
+                }
+
+                // Check if CPU and RAM thresholds are exceeded
+                if (latestDetails.cpu > server.cpuThreshold || latestDetails.ram > server.ramThreshold) {
+                    // If thresholds exceeded, handle notification here (e.g., sending email)
+                    console.log(`Thresholds exceeded for server ${server.SID} of user ${user._id}`);
+                    // {
+                    //     "subject":"Hello Biatch",
+                    //     "html":"<a href='https://www.google.com/search?q=hello+biatch+jesse+pinkman&client=opera&hs=19I&sca_esv=41437dda0f3602d3&tbm=isch&sxsrf=ACQVn08uxR1-3dahwGkdGjD3B9twtIYGzA:1706644106442&source=lnms&sa=X&ved=2ahUKEwjQuuPd8IWEAxX-2wIHHcXEAOIQ_AUoAXoECAQQAw&biw=1482&bih=698&dpr=1.25#imgrc=_9ZXE5dId65JIM'>Click</a>",
+                    //     "to":"rgsbaloch@gmail.com"
+                    // }
+                    console.log('STTSSFSDfsdjijfj ', user.email)
+
+                    // const mailOptions = {
+                    //     from: process.env.SENDER_EMAIL,
+                    //     subject: "Threshold Exceeded",
+                    //     html: "Thresholds exceeded for the server.",
+                    //     to: user.email // Adjust recipient email address
+                    // };
+ 
+                    // await sendMail(mailOptions); 
+                    const transporter = nodemailer.createTransport({
+                        host: "smtp.gmail.com",
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: process.env.SENDER_EMAIL,
+                            pass: process.env.APP_PASSWORD,
+                        },
+                    });
+                    
+                    const mailOptions = { 
+                        from: {
+                            name: 'CLOUDNEXUS',
+                            address: process.env.SENDER_EMAIL,
+                        },
+                        to: user.email, 
+                        subject: "Nah man",
+                        text: "Camera wowo",
+                        html: "<a href='www.google.com'>Hello world?</a>",
+                    };
+                
+                    try {
+                        await transporter.sendMail(mailOptions);
+                        console.log("Email has been sent successfully");
+                        // res.status(200).send({ message: 'Email sent successfully' });
+                    } catch(error) {
+                        console.error(error);
+                        res.status(500).send({ message: 'Internal server error' });
+                    }
+                }
+            }
+        }
+
+        res.status(200).json({ message: 'Threshold checking complete' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};

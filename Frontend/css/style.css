@@ -71,6 +71,15 @@ NOTE: This file contains the styling for responsive Template.
 
 }
 
+#signUp{
+  filter: brightness(100%);
+  transition: filter 0.2s ease;
+}
+
+#signUp:hover
+{
+  filter: brightness(80%);
+}
 .actionView:hover{
   
   filter:opacity(50%);  

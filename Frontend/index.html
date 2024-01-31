@@ -15,12 +15,14 @@
    <!-- Style CSS -->
    <link rel="stylesheet" href="css/style.css">
    <!-- Responsive CSS -->
-   <link rel="stylesheet" href="css/responsive.css">
+   <link rel="stylesheet" href="css/responsive.css"> 
+   
    <!-- <script>
       if (!sessionStorage.getItem('email')) {
          window.location.href = 'sign-in.html';
       } 
    </script> -->
+
 </head>
 
 <body>
@@ -240,8 +242,8 @@
                                     <th scope="col" class="pl-2">IP Address</th>
                                     <th scope="col" class="pl-2">Created</th>
                                     <th scope="col" class="pl-2">OS</th>
-                                    <!-- <th scope= class="pl-2""col">Provider</th> --> 
-                                    <th scope="col" class="pl-2 text-center">Actions</th> 
+                                    <!-- <th scope= class="pl-2""col">Provider</th> -->
+                                    <th scope="col" class="pl-2 text-center">Actions</th>
                                  </tr>
                               </thead>
                               <tbody id="serverTable">
@@ -427,69 +429,131 @@
    </footer>
    <!-- Footer END -->
 
+   <script>
+
+      document.addEventListener("DOMContentLoaded", function () {
+
+         const queryString = window.location.search;
+         const urlParams = new URLSearchParams(queryString);
+
+
+
+         // // Get user_id and SID parameters 
+         // const loginData = {
+         //    _id: urlParams.get('user_id'),
+         //    // password
+         // };
+
+         const token = urlParams.get('user_id');
+
+
+         // Send POST request using Fetch API
+         fetch('http://localhost:3020/api/user/login', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+            },
+            // body: JSON.stringify(loginData),
+         })
+            .then(response => {
+               if (!response.ok) {
+                  throw new Error('Network response was not ok');
+               }
+               return response.json();
+            })
+            .then(data => {
+               // Handle successful response
+               console.log('Executing JavaScript...');
+               console.log('data = = ...', data);
+
+               sessionStorage.setItem('firstname', data.firstname);
+               console.log('First Name = ', data.firstname);
+               sessionStorage.setItem('user_id', data.user_id);
+               console.log('user_id', data.user_id);
+               sessionStorage.setItem('email', data.email);
+               console.log('email Name = ', data.email);
+               sessionStorage.setItem('SID', data.SID);
+               console.log('SID Name = ', data.SID);
+               // sessionStorage.setItem('jwt', data.token.replace(/\n/g, ''));  
+
+               window.location.href = 'index.html';
+               console.log('Success:', data);
+            })
+            .catch(error => {
+               // Handle error 
+               // errormsg.innerHTML = "Email or password is wrong"
+               console.error('Error:', error);
+            });
+
+      })
+   </script>
+
    <!-- Optional JavaScript -->
    <script src="./customJS/index-page.js"></script>
 
    <script>
 
-function redirectToServerDetails(userId, serverId) {
-   console.log("User ID = "+userId+ "SID = "+serverId);
-            window.location.href = `server-details.html?user_id=${userId}&SID=${serverId}`;
-         }
+      function redirectToServerDetails(userId, serverId) {
+         console.log("User ID = " + userId + "SID = " + serverId);
+         window.location.href = `server-details.html?user_id=${userId}&SID=${serverId}`;
+      }
 
-function redirectToDeleteServer(userId, serverId) {
-   console.log("User ID = "+userId+ "SID = "+serverId);
-            window.location.href = `delete-server.html?user_id=${userId}&SID=${serverId}`;
-         }
-     
- document.addEventListener('DOMContentLoaded', function () {
+      function redirectToDeleteServer(userId, serverId) {
+         console.log("User ID = " + userId + "SID = " + serverId);
+         window.location.href = `delete-server.html?user_id=${userId}&SID=${serverId}`;
+      }
 
-   
+      document.addEventListener('DOMContentLoaded', function () {
 
-      let servers;
-      const toSend = {
-         user_id: sessionStorage.getItem('user_id')
-      };
 
-      console.log("UserID:" + sessionStorage.getItem('user_id') + '<>\n\n\n\n');
 
-      fetch('http://localhost:3020/api/user/getAllServers', {
-         method: "POST",
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify(toSend)
-      })
-         .then(response => {
-            if (!response.ok) {
-               throw new Error('Network response was not ok');
-            }
-            return response.json();
+         let servers;
+         const toSend = {
+            user_id: sessionStorage.getItem('user_id')
+         };
+
+         console.log("UserID:" + sessionStorage.getItem('user_id') + '<>\n\n\n\n');
+
+         fetch('http://localhost:3020/api/user/getAllServers', {
+            method: "POST",
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(toSend)
          })
-         .then(data => {
-            servers = data;
-            console.log('Success:', servers);
-
-            const tableBody = document.querySelector('#serverTable');
-            let html = "";
-
-            servers.forEach(server => {
-               const ipAddressString = server.latestServerDetails.ipv4;
-               const startIndex = ipAddressString.indexOf("enX0,");
-               let ipAddress = "";
-
-               if (startIndex !== -1) {
-                  const endIndex = ipAddressString.indexOf(";", startIndex);
-                  if (endIndex !== -1) {
-                     ipAddress = ipAddressString.substring(startIndex + 5, endIndex);
-                  } else {
-                     ipAddress = ipAddressString.substring(startIndex + 5);
-                  }
+            .then(response => {
+               if (!response.ok) {
+                  throw new Error('Network response was not ok');
                }
+               return response.json();
+            })
+            .then(data => {
+               servers = data;
+               console.log('Success:', servers);
+
+               const tableBody = document.querySelector('#serverTable');
+               let html = "";
+
+               servers.forEach(server => {
+                  const ipAddressString = server.latestServerDetails.ipv4;
+                  const startIndex = ipAddressString.indexOf("enX0,");
+                  let ipAddress = "";
+
+                  if (startIndex !== -1) {
+                     const endIndex = ipAddressString.indexOf(";", startIndex);
+                     if (endIndex !== -1) {
+                        ipAddress = ipAddressString.substring(startIndex + 5, endIndex);
+                     } else {
+                        ipAddress = ipAddressString.substring(startIndex + 5);
+                     }
+                  }
+
+                  console.log('server.latestserverdetails = ', server.latestServerDetails)
 
 
 
-               html += `<tr id="serverTemplate" data-id="${server.SID}"  style="overflow: visible;">
+                  html += `<tr id="serverTemplate" data-id="${server.SID}"  style="overflow: visible;">
                           <td class="d-flex align-items-center">
                               <div class="avatar-40 text-center rounded-circle iq-bg-danger position-relative">
                                   <span class="font-size-20 align-item-center"><i class="fa fa-user"
@@ -517,24 +581,24 @@ function redirectToDeleteServer(userId, serverId) {
 
  
                                           </tr>`;
-                                       });
-                                       
-                                       tableBody.innerHTML = html;
-                                       
-                                       //  <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                       //  <a class="dropdown-item" href="#"><i
-                                       //          class="ri-printer-fill mr-2"></i>Print</a>
-                                       //  <a class="dropdown-item" href="#"><i
-                                       //          class="ri-file-download-fill mr-2"></i>Download</a> 
-         })
-         .catch(error => {
-            // Handle error  
-            console.error('Error:', error);
-         });
-         
-         
+               });
+
+               tableBody.innerHTML = html;
+
+               //  <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
+               //  <a class="dropdown-item" href="#"><i
+               //          class="ri-printer-fill mr-2"></i>Print</a>
+               //  <a class="dropdown-item" href="#"><i
+               //          class="ri-file-download-fill mr-2"></i>Download</a> 
+            })
+            .catch(error => {
+               // Handle error  
+               console.error('Error:', error);
+            });
+
+
          // })
- });
+      });
    </script>
 
    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>

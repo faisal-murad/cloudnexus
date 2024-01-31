@@ -4,7 +4,8 @@ import { Schema } from "mongoose";
 const serverSchema = new Schema({
     SID: String,
     UID: {
-        type: Schema.Types.ObjectId, ref: 'User'
+        // type: Schema.Types.ObjectId, ref: 'User'
+        type:String,
     },
     cpuThreshold:{
         type: Number,

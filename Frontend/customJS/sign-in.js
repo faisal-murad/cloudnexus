@@ -104,3 +104,8 @@ document.getElementById('signUpForm').addEventListener('submit', function (event
             console.error('Error:', error);
         });
 }); 
+
+function redirectToGoogleLogin() {
+    // Redirect to the Google OAuth login page
+    window.location.href = 'http://localhost:3020/auth/google';
+}

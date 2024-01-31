@@ -368,7 +368,7 @@
                            </div>
                            <div class="mt-4">
                               <h5 class="text-black text-uppercase">AVERAGE RAM Used</h5>
-                              <h3 class="d-flex text-danger"> 4.2%</h3>
+                              <h3 class="d-flex text-danger" id="avgRam"> 4.2%</h3>
                            </div>
                            <div class="mt-3">
                               <div class="iq-progress-bar-linear d-inline-block mt-1 w-100">
@@ -388,7 +388,7 @@
                            </div>
                            <div class="mt-4">
                               <h5 class="text-black text-uppercase">AVERAGE DISK USAGE</h5>
-                              <h3 class="d-flex text-primary"> 5.8GB</h3>
+                              <h3 class="d-flex text-primary" id="avgDisk"> 5.8GB</h3>
                            </div>
                            <div class="mt-3">
                               <div class="iq-progress-bar-linear d-inline-block mt-1 w-100">
@@ -408,7 +408,7 @@
                            </div>
                            <div class="mt-4">
                               <h5 class="text-black text-uppercase">AVERAGE MEMORY USAGE FOR SERVICES</h5>
-                              <h3 class="d-flex text-danger"> 3.5KB</h3>
+                              <h3 class="d-flex text-danger" id="avgServiceMemory"> 3.5KB</h3>
                            </div>
                            <div class="mt-3">
                               <div class="iq-progress-bar-linear d-inline-block mt-1 w-100">
@@ -435,7 +435,7 @@
                                  </span>
                                  <div
                                     class="progress-value w-100 h-100 rounded d-flex align-items-center justify-content-center text-center">
-                                    <div class="h4 mb-0">75</div>
+                                    <div class="h4 mb-0" id="totalStorage">75</div>
                                  </div>
                               </div>
                               <h5 class="d-block mt-2 text-white font-weight-500">Storage<br> Usage</h5>
@@ -444,7 +444,7 @@
                               <!-- <div class="avatar-30 text-center rounded-circle iq-bg-danger" data-wow-delay="0.2s">
                                     <span class="font-size-14 align-item-center"><i class="ri-account-box-line"></i></span>
                                  </div> -->
-                              <h5 class="text-white mt-2">594875625</h5>
+                              <h5 class="text-white mt-2" id="totalUsers">594875625</h5>
                               <span class="text-white">Total Users</span>
                            </div>
                         </div>
@@ -572,24 +572,28 @@
                               <div class="container rounded mt-2 mb-2 p-3" style="background-color: var(--iq-search);">
                                  <h5>CPU</h5>
                                  <div class="range-slider m-0">
-                                    <input class="range-slider__range" type="range" value="30" min="0" max="100">
-                                    <span class="range-slider__value">0%</span>
+                                    <input class="range-slider__range" type="range" id="cpuRange" value="0" min="0"
+                                       max="100">
+                                    <span class="range-slider__value" id="cpuSpan">0%</span>
                                  </div>
                               </div>
                               <div class="container rounded mt-2 mb-2 p-3" style="background-color: var(--iq-search);">
                                  <h5>Ram</h5>
                                  <div class="range-slider m-0">
-                                    <input class="range-slider__range" type="range" value="30" min="0" max="100">
-                                    <span class="range-slider__value">0%</span>
+                                    <input class="range-slider__range" type="range" id="ramRange" value="0" min="0"
+                                       max="100">
+                                    <span class="range-slider__value" id="ramSpan">0%</span>
                                  </div>
                               </div>
-                              
-                              
+
+
 
                            </div>
                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Save changes</button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                 onclick="rangeSlider()">Close</button>
+                              <button type="button" class="btn btn-primary" onclick="handleThreshold()">Save
+                                 changes</button>
                            </div>
                         </div>
                      </div>
@@ -846,38 +850,7 @@
       </div>
       <div class="container-fluid">
          <div class="row content-body">
-            <div class="col-lg-6">
-               <div
-                  class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
-                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Network Interface Details</h4>
-                  <table class="table table-hover table-borderless rounded m-2 w-auto"
-                     style="border-top: 2px #0000003f solid;">
-                     <thead>
-                        <tr>
-                           <th>Network Interface Name</th>
-                           <th>Mac Address</th>
-                           <th>IPv4 Address</th>
-                           <th>IPv6 Address</th>
-                        </tr>
-                     </thead>
-                     <tbody id="server-details-body">
-                        <tr class="customTable">
-                           <td>lo</td>
-                           <td id="lomac">${mac}</td>
-                           <td id="loipv4">${ipv4}</td>
-                           <td id="loipv6">${ipv6}</td>
-                        </tr>
-                        <tr class="customTable">
-                           <td>enx0</td>
-                           <td id="enx0mac">${mac}</td>
-                           <td id="enx0ipv4">${ipv4}</td>
-                           <td id="enx0ipv6">${ipv6}</td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div>
-            </div>
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                <div
                   class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
                   <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Disk Partition Details</h4>
@@ -885,11 +858,13 @@
                      style="border-top: 2px #0000003f solid;">
                      <thead>
                         <tr>
-                           <th>Mount Point</th>
-                           <th>File System</th>
-                           <th>Total Size (GB)</th>
-                           <th>Used Space (GB)</th>
-                           <th>Available Space (GB)</th>
+                           <th>Mounted On</th>
+                           <th>FileSystem</th>
+                           <th>Type</th>
+                           <th>Size</th>
+                           <th>Used</th>
+                           <th>Available</th>
+                           <th>Use (%)</th>
                         </tr>
                      </thead>
                      <tbody id="partitionTable" class="customTable">
@@ -902,7 +877,35 @@
                   </table>
                </div>
             </div>
+
+            <div class="col-lg-12">
+               <div
+                  class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">INODES Table</h4>
+                  <table class="table table-hover table-borderless rounded w-auto"
+                     style="border-top: 2px #0000003f solid;">
+                     <thead>
+                        <tr>
+                           <th>Mounted On</th>
+                           <th>FileSystem</th>
+                           <th>Type</th>
+                           <th>INodes</th>
+                           <th>IUsed</th>
+                           <th>IFree</th>
+                           <th>Use (%)</th>
+                        </tr>
+                     </thead>
+                     <tbody id="inodeTable" class="customTable">
+                        <td>${mac}</td>
+                        <td>${ipv6}</td>
+                        <td>${ipv6}</td>
+                        <td>${ipv6}</td>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
          </div>
+
       </div>
       <div class="container-fluid">
          <div class="row content-body">
@@ -931,25 +934,34 @@
                   </table>
                </div>
             </div>
+
             <div class="col-lg-6">
                <div
                   class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-danger d-flex justify-content-center">
-                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">INODES Table</h4>
-                  <table class="table table-hover table-borderless rounded w-auto"
+                  <h4 id="setData" style="font-size: 16px;" class="text-center mt-2">Network Interface Details</h4>
+                  <table class="table table-hover table-borderless rounded m-2 w-auto"
                      style="border-top: 2px #0000003f solid;">
                      <thead>
                         <tr>
-                           <th>Mount Point</th>
-                           <th>Total Size (GB)</th>
-                           <th>Used Space (GB)</th>
-                           <th>Available Space (GB)</th>
+                           <th>Network Interface Name</th>
+                           <th>Mac Address</th>
+                           <th>IPv4 Address</th>
+                           <th>IPv6 Address</th>
                         </tr>
                      </thead>
-                     <tbody id="inodeTable" class="customTable">
-                        <td>${mac}</td>
-                        <td>${ipv6}</td>
-                        <td>${ipv6}</td>
-                        <td>${ipv6}</td>
+                     <tbody id="server-details-body">
+                        <tr class="customTable">
+                           <td>lo</td>
+                           <td id="lomac">${mac}</td>
+                           <td id="loipv4">${ipv4}</td>
+                           <td id="loipv6">${ipv6}</td>
+                        </tr>
+                        <tr class="customTable">
+                           <td>enx0</td>
+                           <td id="enx0mac">${mac}</td>
+                           <td id="enx0ipv4">${ipv4}</td>
+                           <td id="enx0ipv6">${ipv6}</td>
+                        </tr>
                      </tbody>
                   </table>
                </div>
@@ -983,10 +995,15 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
 
+
+
       // Get user_id and SID parameters
       const user_id = urlParams.get('user_id');
       const SID = urlParams.get('SID');
 
+      var fetchedRam, fetchedCPU;
+
+      var minuteCount=15; 
 
       var cpuArray;
 
@@ -1014,6 +1031,8 @@
                // Handle the response data
                console.log('Success:', recievedData);
                const data = recievedData[0];
+               fetchedCPU = data.cpu;
+               fetchedRam = data.ram;
 
 
 
@@ -1021,6 +1040,10 @@
                const avgCpuUsage = (parseFloat(data.cpu)).toFixed(2);
                console.log(`Average CPU Usage = ${data.cpu}, ${avgCpuUsage}`);
                document.getElementById('avgCpuUsage').innerText = `${avgCpuUsage}%`;
+
+               document.getElementById('avgRam').innerText = `${data.ram}%`;
+               document.getElementById('avgDisk').innerText = `${data.totalstorage}%`;
+               document.getElementById('avgServiceMemory').innerText = `${data.ramcache}%`;
 
                const avgCpuUsageBar = document.getElementById('avgCpuUsageBar');
                avgCpuUsageBar.dataset.percent = avgCpuUsage;
@@ -1067,6 +1090,8 @@
 
                document.getElementById('cpuCores').innerText = data.cpucores;
                document.getElementById('cpuSockets').innerText = data.cpusockets;
+               document.getElementById('totalStorage').innerText = parseFloat(data.totalstorage).toFixed();
+               document.getElementById('totalUsers').innerText = data.totalusers;
 
                // Split the entries by semicolon
                const diskEntries = data.disks.split(';');
@@ -1200,16 +1225,18 @@
                partitionTable.innerHTML = '';
 
                diskDetails.forEach(entry => {
-                  const [mountPoint, fileSystem, totalSize, usedSpace, availableSpace] = entry.split(',');
+                  const [mountPoint, fileSystem, type, totalSize, usedSpace, availableSpace, use] = entry.split(',');
 
 
                   const row = document.createElement('tr');
                   row.innerHTML = `
                             <td>${mountPoint}</td>
                             <td>${fileSystem || 'N/A'}</td>
-                            <td>${totalSize ? `${(parseFloat(totalSize) / Math.pow(1024, 3)).toFixed(2)} GB` : 'N/A'}</td>
-                            <td>${usedSpace ? `${(parseFloat(usedSpace) / Math.pow(1024, 3)).toFixed(2)} GB` : 'N/A'}</td>
-                            <td>${availableSpace ? `${(parseFloat(availableSpace) / Math.pow(1024, 3)).toFixed(2)} GB` : 'N/A'}</td>
+                            <td>${type || 'N/A'}</td>
+                            <td>${totalSize ? `${totalSize}B` : 'N/A'}</td>
+                            <td>${usedSpace ? `${usedSpace}B` : 'N/A'}</td>
+                            <td>${availableSpace ? `${availableSpace}B` : 'N/A'}</td>
+                            <td>${use ? `${use}` : 'N/A'}</td>
                         `;
 
                   partitionTable.appendChild(row);
@@ -1251,25 +1278,41 @@
                inodeTable.innerHTML = '';
 
                inodeDetails.forEach(entry => {
-                  const [mountPoint, totalInodes, usedInodes, availableInodes] = entry.split(',');
+                  const [mountPoint, fileSystem, type, totalInodes, usedInodes, iFree, use] = entry.split(',');
 
-                  // Now you can use these values as needed
-                  console.log('Mount Point:', mountPoint);
-                  console.log('Total Inodes:', totalInodes);
-                  console.log('Used Inodes:', usedInodes);
-                  console.log('Available Inodes:', availableInodes);
 
                   const row = document.createElement('tr');
                   row.innerHTML = `
                                  <td>${mountPoint}</td> 
+                                 <td>${fileSystem || 'N/A'}</td>
+                                 <td>${type || 'N/A'}</td>
                                  <td>${totalInodes || 'N/A'}</td>
                                  <td>${usedInodes || 'N/A'}</td>
-                                 <td>${availableInodes || 'N/A'}</td>
+                                 <td>${iFree || 'N/A'}</td>
+                                 <td>${use || 'N/A'}</td>
                              `;
 
                   inodeTable.appendChild(row);
                });
 
+               //////////////////////////////////////////////////////////
+               ///////////////////Email notification system/////////////
+
+               console.log('i am seeing ',data.cpu);
+               console.log('i am seeing ',data.ram);
+               if (parseFloat(data.cpu)*100 > sessionStorage.getItem('cpuThreshold') || parseFloat(data.ram) > sessionStorage.getItem('ramThreshold')) {
+                  if(minuteCount==15)
+                  {
+                     minuteCount=1;
+                     console.log('Inside the if condition', minuteCount);
+                     // sendEmail();
+                  }
+                  else{
+                     minuteCount++;
+                     console.log('Inside the else condition', minuteCount);
+                     
+                  }
+               }
 
 
 
@@ -1294,177 +1337,182 @@
                }
 
 
-               var cpu_utilization_options = {
-                  chart: {
-                     type: 'line',
-                     height: 300
-                  },
-                  series: [{
-                     name: 'CPU Utilization (%)',
-                     data: cpuArray
-                  }],
-                  xaxis: {
-                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
-                  }
-               }
-               var chart = new ApexCharts(document.querySelector("#cpu_utilization_chart"), cpu_utilization_options);
-               chart.render();
-
-               var memory_utilization_options = {
-                  chart: {
-                     type: 'line',
-                     height: 300
-                  },
-                  series: [{
-                     name: 'Memory Utilization (%)',
-                     data: ramArray
-                  }],
-                  xaxis: {
-                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
-                  }
-               }
-               var chart = new ApexCharts(document.querySelector("#memory_utilization_chart"), memory_utilization_options);
-               chart.render();
 
 
-               var network_in_options = {
-                  chart: {
-                     type: 'line',
-                     height: 300
-                  },
-                  series: [{
-                     name: 'Network In (bytes)',
-                     data: [30, 40, 35, 50, 49]
-                  }],
-                  xaxis: {
-                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
-                  }
-               }
-               var chart = new ApexCharts(document.querySelector("#network_in_chart"), network_in_options);
-               chart.render();
+                  //////////////////////////////////////////////////////////
+                  //////////////////////////////////////////////////////////
 
-
-               var network_out_options = {
-                  chart: {
-                     type: 'line',
-                     height: 300
-                  },
-                  series: [{
-                     name: 'Network Out (bytes)',
-                     data: [30, 40, 35, 50, 49]
-                  }],
-                  xaxis: {
-                     categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
-                  },
-                  toolbar: {
-                     show: true,
-                     tools: {
-                        download: true,
-                        zoomin: true,
-                        zoomout: true,
-                        selection: true,
-                        zoom: true,
+                  var cpu_utilization_options = {
+                     chart: {
+                        type: 'line',
+                        height: 300
                      },
-                  },
+                     series: [{
+                        name: 'CPU Utilization (%)',
+                        data: cpuArray
+                     }],
+                     xaxis: {
+                        categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                     }
+                  }
+                  var chart = new ApexCharts(document.querySelector("#cpu_utilization_chart"), cpu_utilization_options);
+                  chart.render();
 
-               }
-               var chart = new ApexCharts(document.querySelector("#network_out_chart"), network_out_options);
-               chart.render();
-
-               // var options2 = {
-               //    chart: {
-               //       type: 'line', 
-               //       height: 300
-               //    },
-               //    series: [{
-               //       name: 'sales',
-               //       data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
-               //    }],
-               //    xaxis: {
-               //       categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
-               //    }
-               // }
-               // var chart = new ApexCharts(document.querySelector("#apex-basic1"), options2);
-               // chart.render();
-
-
-               // console.log("CPU ARRAY ", cpuArray);
-               // var options1 = {
-               //    chart: {
-               //       height: 350,
-               //       type: "line",
-               //       foreColor: '#b5b5be',
-               //       zoom: {
-               //          enabled: !1
-               //       }
-               //    },
-               //    colors: ["#4e37b2"],
-               //    series: [{
-               //       name: "Desktops",
-               //       data: cpuArray
-               //    }],
-               //    dataLabels: {
-               //       enabled: !1
-               //    },
-               //    stroke: {
-               //       curve: "straight"
-               //    },
-               //    title: {
-               //       text: "Product Traends by Month",
-               //       align: "left"
-               //    },
-               //    grid: {
-               //       row: {
-               //          colors: ["#f3f3f3", "transparent"],
-               //          opacity: .5
-               //       }
-               //    },
-               //    xaxis: {
-               //       categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
-               //    }
-               // };
-               // var chart = new ApexCharts(document.querySelector("#apex-basic111"), options1);
-               // chart.render();
-
-               // var options4 = {
-               //    chart: {
-               //       height: 350,
-               //       type: "line",
-               //       foreColor: '#b5b5be',
-               //       zoom: {
-               //          enabled: !1
-               //       }
-               //    },
-               //    colors: ["#4e37b2"],
-               //    series: [{
-               //       name: "Desktops",
-               //       data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-               //    }],
-               //    dataLabels: {
-               //       enabled: !1
-               //    },
-               //    stroke: {
-               //       curve: "straight"
-               //    },
-               //    title: {
-               //       text: "Product Traends by Month",
-               //       align: "left"
-               //    },
-               //    grid: {
-               //       row: {
-               //          colors: ["#f3f3f3", "transparent"],
-               //          opacity: .5
-               //       }
-               //    },
-               //    xaxis: {
-               //       categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"]
-               //    }
-               // };
-               // var chart = new ApexCharts(document.querySelector("#aab"), options4);
-               // chart.render();
+                  var memory_utilization_options = {
+                     chart: {
+                        type: 'line',
+                        height: 300
+                     },
+                     series: [{
+                        name: 'Memory Utilization (%)',
+                        data: ramArray
+                     }],
+                     xaxis: {
+                        categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                     }
+                  }
+                  var chart = new ApexCharts(document.querySelector("#memory_utilization_chart"), memory_utilization_options);
+                  chart.render();
 
 
-            })
+                  var network_in_options = {
+                     chart: {
+                        type: 'line',
+                        height: 300
+                     },
+                     series: [{
+                        name: 'Network In (bytes)',
+                        data: [30, 40, 35, 50, 49]
+                     }],
+                     xaxis: {
+                        categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                     }
+                  }
+                  var chart = new ApexCharts(document.querySelector("#network_in_chart"), network_in_options);
+                  chart.render();
+
+
+                  var network_out_options = {
+                     chart: {
+                        type: 'line',
+                        height: 300
+                     },
+                     series: [{
+                        name: 'Network Out (bytes)',
+                        data: [30, 40, 35, 50, 49]
+                     }],
+                     xaxis: {
+                        categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                     },
+                     toolbar: {
+                        show: true,
+                        tools: {
+                           download: true,
+                           zoomin: true,
+                           zoomout: true,
+                           selection: true,
+                           zoom: true,
+                        },
+                     },
+
+                  }
+                  var chart = new ApexCharts(document.querySelector("#network_out_chart"), network_out_options);
+                  chart.render();
+
+                  // var options2 = {
+                  //    chart: {
+                  //       type: 'line', 
+                  //       height: 300
+                  //    },
+                  //    series: [{
+                  //       name: 'sales',
+                  //       data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+                  //    }],
+                  //    xaxis: {
+                  //       categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+                  //    }
+                  // }
+                  // var chart = new ApexCharts(document.querySelector("#apex-basic1"), options2);
+                  // chart.render();
+
+
+                  // console.log("CPU ARRAY ", cpuArray);
+                  // var options1 = {
+                  //    chart: {
+                  //       height: 350,
+                  //       type: "line",
+                  //       foreColor: '#b5b5be',
+                  //       zoom: {
+                  //          enabled: !1
+                  //       }
+                  //    },
+                  //    colors: ["#4e37b2"],
+                  //    series: [{
+                  //       name: "Desktops",
+                  //       data: cpuArray
+                  //    }],
+                  //    dataLabels: {
+                  //       enabled: !1
+                  //    },
+                  //    stroke: {
+                  //       curve: "straight"
+                  //    },
+                  //    title: {
+                  //       text: "Product Traends by Month",
+                  //       align: "left"
+                  //    },
+                  //    grid: {
+                  //       row: {
+                  //          colors: ["#f3f3f3", "transparent"],
+                  //          opacity: .5
+                  //       }
+                  //    },
+                  //    xaxis: {
+                  //       categories: ["5 min", "4 min", "3 min", "2 min", "1 min"]
+                  //    }
+                  // };
+                  // var chart = new ApexCharts(document.querySelector("#apex-basic111"), options1);
+                  // chart.render();
+
+                  // var options4 = {
+                  //    chart: {
+                  //       height: 350,
+                  //       type: "line",
+                  //       foreColor: '#b5b5be',
+                  //       zoom: {
+                  //          enabled: !1
+                  //       }
+                  //    },
+                  //    colors: ["#4e37b2"],
+                  //    series: [{
+                  //       name: "Desktops",
+                  //       data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+                  //    }],
+                  //    dataLabels: {
+                  //       enabled: !1
+                  //    },
+                  //    stroke: {
+                  //       curve: "straight"
+                  //    },
+                  //    title: {
+                  //       text: "Product Traends by Month",
+                  //       align: "left"
+                  //    },
+                  //    grid: {
+                  //       row: {
+                  //          colors: ["#f3f3f3", "transparent"],
+                  //          opacity: .5
+                  //       }
+                  //    },
+                  //    xaxis: {
+                  //       categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"]
+                  //    }
+                  // };
+                  // var chart = new ApexCharts(document.querySelector("#aab"), options4);
+                  // chart.render();
+
+
+               })
             .catch(error => {
                // Handle error  
                console.error('Error:', error);
@@ -1475,11 +1523,95 @@
 
 
 
+
+
       fetchDataAndDisplay();
 
       // Set up an interval to call the function every minute (60 seconds)
-      setInterval(fetchDataAndDisplay, 60000); 
+      setInterval(fetchDataAndDisplay, 60000);
+
    </script>
+   <script>
+
+      function handleThreshold() {
+         // Get CPU and RAM threshold values
+         const cpuThreshold = document.getElementById('cpuRange').value;
+         const ramThreshold = document.getElementById('ramRange').value;
+
+         // Log the values (replace this with your desired logic)
+         console.log("CPU Threshold:", cpuThreshold);
+         console.log("RAM Threshold:", ramThreshold);
+
+         sessionStorage.setItem('cpuThreshold', cpuThreshold);
+         sessionStorage.setItem('ramThreshold', ramThreshold);
+
+         // You can also send the values to your server using AJAX or fetch
+         // Example using fetch:
+         fetch('http://localhost:3020/api/user/updateThreshold', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               cpuThreshold,
+               ramThreshold,
+               user_id: user_id,
+               SID: SID
+            }),
+         })
+            .then(response => response.json())
+            .then(data => {
+               // Handle the response from the server (if needed)
+               console.log('Server response:', data);
+               // Close the modal
+               $('#thresholdModal').modal('hide');
+            })
+            .catch(error => {
+               console.error('Error:', error);
+            });
+      }
+
+
+
+   </script>
+
+   <script>
+      function sendEmail() {
+      const emailOptions = {
+         "subject": "test by programmer",
+         "body-text":"Tahir ke mun main lele",
+         "html": "<a href='https://www.youtube.com'>fucky</a>",
+         "to": sessionStorage.getItem('email')
+      }
+
+      fetch('http://localhost:3020/api/user/sendMail', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(emailOptions)
+
+      })
+         .then(response => response.json)
+         .then(data => {
+            console.log(data);
+         })
+         .catch(err)
+      {
+         console.error('Error: ', err);
+      }
+      // }
+
+      console.log('fetchedCPU', fetchedCPU)
+      console.log('data.cpuThreshold', cpuThreshold)
+      console.log('fetchedRam', fetchedRam)
+      console.log('data.ramThreshold', ramThreshold)
+      sendEmail();
+      }
+
+
+   </script>
+
 
    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
@@ -1497,8 +1629,43 @@
    <!-- Wow JavaScript -->
    <script src="js/wow.min.js"></script>
 
-   <script src="./customJS/rangeFiles/rangeJS.js"></script>
    <!-- Apexcharts JavaScript -->
+
+   <script src="./customJS/rangeFiles/rangeJS.js"></script>
+   <!-- <script>
+
+      var rangeSlider = function () {
+         var slider = $('.range-slider'),
+            range = $('.range-slider__range'),
+            value = $('.range-slider__value');
+
+         slider.each(function () {
+            value.each(function () {
+               var value = $(this).prev().attr('value') + '%';
+               $(this).html(value);
+            });
+
+            range.on('input', function () {
+               var displayedValue = this.value == this.max ? this.value + '%' : this.value + '%';
+               $(this).next(value).html(displayedValue);
+            });
+
+            // Set initial value with percentage sign
+            var initialValue = range.val() == range.attr('max') ? range.val() + '%' : range.val() + '%';
+            range.next(value).html(initialValue);
+         });
+
+      };
+
+      rangeSlider(); 
+
+      
+
+      document.getElementById('cpuRange').value = data.cpuThreshold;
+      document.getElementById('ramThreshold').value = data.ramThreshold;
+      document.getElementById('cpuSpan').innerText = `${data.cpuThreshold}%`;
+      document.getElementById('ramSpan').innerText = `${data.ramThreshold}%`;
+   </script> -->
    <!-- <script src="js/apexcharts.js"></script> -->
    <!-- Slick JavaScript -->
 

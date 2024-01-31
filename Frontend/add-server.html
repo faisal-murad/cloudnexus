@@ -195,7 +195,7 @@
 
                   <div class="title-on-header text-center">
 
-                     <h2 class="d-block mb-3 text-black">Add a new Server</h2> 
+                     <h2 class="d-block mb-3 text-black">Add a new Server</h2>
                   </div>
                   <div class="iq-card iq-card-block iq-card-stretch iq-card-height iq-bg-primary">
                      <div class="iq-card-body box iq-box-relative welcome-box">
@@ -212,10 +212,10 @@
                         <h5>Supported Flavors : Ubuntu, Debian, RedHat, CentOS, Rocky Linux, Oracle Linux, AlmaLinux,
                            Amazon Linux, SUSE, Fedora, OSX, FreeBSD, IBM AIX, Raspberry Pi, Mandriva Linux, CoreOS,
                            Gentoo Linux and Oracle Solaris (x86_64 architecture only)</h5>
-                        </div>
                      </div>
-                     <h5 id="serverInstalled" style="color: green; text-align: center;"></h5> 
                   </div>
+                  <h5 id="serverInstalled" style="color: green; text-align: center;"></h5>
+               </div>
             </div>
          </div>
       </div>
@@ -262,51 +262,54 @@
       }
    </script>
 
-   
-<script>
-   let userSID;
-   let user_SID_on_Login = sessionStorage.getItem('SID');
-   const serverInstalled = document.getElementById('serverInstalled');
 
-   async function sidResponse() {
-      const tempp = {
-         user_id: sessionStorage.getItem('user_id')
-      };
+   <script>
+      let userSID;
+      let user_SID_on_Login = sessionStorage.getItem('SID');
+      console.log('user_SID_on_Login', user_SID_on_Login);
+      const serverInstalled = document.getElementById('serverInstalled');
 
-      try {
-         const response = await fetch('http://localhost:3020/api/user/checkSid', {
-            method: "POST",
-            headers: {
-               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(tempp)
-         });
+      async function sidResponse() {
+         const tempp = {
+            user_id: sessionStorage.getItem('user_id')
+         };
 
-         if (!response.ok) {
-            throw new Error('Network Response was not OK');
+
+         console.log('user_id add server page = ', user_id);
+         try {
+            const response = await fetch('http://localhost:3020/api/user/checkSid', {
+               method: "POST",
+               headers: {
+                  'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(tempp)
+            });
+
+            if (!response.ok) {
+               throw new Error('Network Response was not OK');
+            }
+
+            const data = await response.json();
+
+            console.log('Success', data);
+            userSID = data.SID;
+
+            console.log("user_SID_on_Login datatype:", typeof (user_SID_on_Login));
+            console.log("userSID datatype:", typeof (userSID));
+
+            if (user_SID_on_Login != userSID) {
+               alert('Agent has been successfully installed!');
+               // serverInstalled.innerText ='Agent has been successfully installed!';
+               sessionStorage.setItem('SID', userSID);
+               window.location.href = 'index.html';
+            }
+         } catch (error) {
+            console.error('Error:', error);
          }
-
-         const data = await response.json();
-
-         console.log('Success', data);
-         userSID = data.SID;
-
-         console.log("user_SID_on_Login datatype:", typeof(user_SID_on_Login));
-         console.log("userSID datatype:", typeof(userSID));
-
-         if (user_SID_on_Login != userSID) {
-            alert('Agent has been successfully installed!');
-            // serverInstalled.innerText ='Agent has been successfully installed!';
-            sessionStorage.setItem('SID', userSID);
-            window.location.href = 'index.html';
-         }
-      } catch (error) {
-         console.error('Error:', error);
       }
-   }
 
-   setInterval(sidResponse, 1000);
-</script>
+      setInterval(sidResponse, 1000);
+   </script>
 
    <!-- <script>
       const userName = sessionStorage.getItem('firstname');
@@ -506,9 +509,9 @@
       const cmd1 = document.getElementById('cmd1');
       const cmd2 = document.getElementById('cmd2');
       const user_id = sessionStorage.getItem('user_id');
-
+      const SID = sessionStorage.getItem('SID');
       const data = {
-         "email": email,
+         "_id": user_id,
       }
       fetch('http://localhost:3020/api/user/FindOneUser', {
          method: 'POST',
@@ -523,13 +526,17 @@
             }
             return response.json();
          })
-         .then(data => {
+         .then(dataa => {
             // Handle successful response
             console.log('Executing JavaScript...');
-            console.log('Success:', data);
+            console.log('Success:', dataa);
+            console.log('user_id msm = ', dataa._id);
+            console.log('user_id msm = ', dataa.user_id);
+            console.log('user_id msm = ', dataa.SID);
+
 
             cmd1.innerText = "wget https://raw.githubusercontent.com/hammadkhaliq566/cloudnexus/main/cloudnexus_install.sh";
-            cmd2.innerText = `sudo bash cloudnexus_install.sh ${data.SID} ${user_id} root`;
+            cmd2.innerText = `sudo bash cloudnexus_install.sh ${SID} ${user_id} root`;
          })
          .catch(error => {
             // Handle error  

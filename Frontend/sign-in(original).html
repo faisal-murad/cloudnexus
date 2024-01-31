@@ -5,7 +5,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="https://kit.fontawesome.com/312c6a92c7.js" crossorigin="anonymous"></script>
     <title>CloudNexus</title>
     <!-- Favicon -->
     <link rel="shortcut icon" href="images/favicon.ico" />
@@ -27,13 +26,13 @@
     </div>
     <!-- loader END -->
     <!-- Sign in Start -->
-    <section>
+    <section class="sign-in-page">
         <div class="container p-0" id="sign-in-page-box">
-            <!-- <div class="bg-white form-container sign-up-container">
+            <div class="bg-white form-container sign-up-container">
                 <div class="sign-in-page-data">
                     <div class="sign-in-from w-100 m-auto">
                         <h1 class="mb-3 text-center">Sign in</h1>
-                        <p class="text-center text-dark">Enter yousdfsdfsdfr email address and password to access admin panel.
+                        <p class="text-center text-dark">Enter your email address and password to access admin panel.
                         </p>
                         <form class="mt-4" id="signInForm">
                             <div class="form-group">
@@ -60,27 +59,46 @@
                         </form>
                     </div>
                 </div>
-            </div> -->
-            <div class="bg-white form-container sign-in-container" style="color:white; background-image: url('./images/liquid-cheese-2.png') !important;">
-                <div class="sign-in-page-data" >
+            </div>
+            <div class="bg-white form-container sign-in-container">
+                <div class="sign-in-page-data">
                     <div class="sign-in-from w-100 m-auto">
-                        <h1 class="mb-3 text-center">Welcome to CloudNexus</h1>
-                        <p class="text-center -dark">Your centralized dashboard for monitoring multiple servers in the cloud.</p>
-                        <div class="features mt-4">
-                            <h3>Dashboard Overview</h3>
-                            <p>Access real-time data and insights from all your servers in one place.</p>
-                        </div>
-                        <div class="benefits mt-4">
-                            <h3>Monitor Multiple Servers</h3>
-                            <p>Effortlessly manage and monitor multiple servers simultaneously, ensuring optimal performance and uptime.</p>
-                        </div>
-                        <div class="cta mt-4 text-center">
-                            <a href="#" class="btn btn-primary" onclick="redirectToGoogleLogin()">Get Started</a>
-                        </div>
+                        <h1 class="mb-3 text-center">Sign Up</h1>
+                        <p class="text-center text-dark">Enter your information to access admin panel.
+                        </p>
+                        <form class="mt-4" id="signUpForm">
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">First Name</label>
+                                <input type="text" class="form-control mb-0" id="firstname" placeholder="Your First Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Last Name</label>
+                                <input type="text" class="form-control mb-0" id="lastname" placeholder="Your Last Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail3">Email address</label>
+                                <input type="email" class="form-control mb-0" id="email" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword2">Password</label>
+                                <input type="password" class="form-control mb-0" id="password" placeholder="Password">
+                            </div>
+                            <div class="d-inline-block w-100">
+                                <div class="custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                    <label class="custom-control-label" for="customCheck2">I accept <a href="#">Terms
+                                            and Conditions</a></label>
+                                </div>
+                            </div>
+                            <div class="sign-info">
+                                <button type="submit" class="btn btn-primary mb-2" onclick="redirectToGoogleLogin()">Sign Up</button>
+                                <span class="text-dark d-block line-height-2">Already Have Account ? <a href="#">Log
+                                        In</a></span>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            
             <div class="overlay-container">
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
@@ -93,10 +111,7 @@
                         <a class="sign-in-logo mb-5" href="#"><img src="images/logo-full.png" class="img-fluid"
                                 alt="logo"></a>
                         <p>Enter your personal details and start journey with us</p>
-                        <!-- <button class="btn iq-border-primary" id="signUp" onclick="redirectToGoogleLogin()"> <i class='fab fa-google'></i> Sign In with Google</i></button> -->
-                        <div class="cta mt-4 text-center">
-                            <a href="#" class="btn btn-primary bg-danger" onclick="redirectToGoogleLogin()"> <i class='fab fa-google'></i> Sign In with Google</i></a>
-                        </div>
+                        <button class="btn iq-border-primary" id="signUp">Sign In</button>
                     </div>
                 </div>
             </div>
